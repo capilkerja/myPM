@@ -1,98 +1,94 @@
-# DewaKoding Project Management
-
-![image](https://raw.githubusercontent.com/SeptiawanAjiP/dewakoding-project-management/refs/heads/main/image-1.jpeg)
-![image](https://raw.githubusercontent.com/SeptiawanAjiP/dewakoding-project-management/refs/heads/main/image-4.jpeg)
-![image](https://raw.githubusercontent.com/SeptiawanAjiP/dewakoding-project-management/refs/heads/main/image-5.jpeg)
+# MyDukcapil
 
 A Laravel Filament 3 application for managing projects with ticket management and status tracking.
 
 ## Features
 
-- Project management with ticket prefix configuration
-- Role-based access control (using Filament Shield)
-- Team member management with role assignments
-- Customizable ticket statuses with color coding
-- Ticket management with assignees and due dates
-- Unique ticket identifiers
-- Epic management for organizing tickets into larger initiatives
-- Comment system for tickets to facilitate team discussions
-- Kanban board view for visualizing ticket progress
-- Assign ticket to multi users
-- User contributions chart
-- Timeline view
-- Export ticket data to CSV
-- Leaderboard for team member performance
-- External dashboard view (Client Portal)
+-   Project management with ticket prefix configuration
+-   Role-based access control (using Filament Shield)
+-   Team member management with role assignments
+-   Customizable ticket statuses with color coding
+-   Ticket management with assignees and due dates
+-   Unique ticket identifiers
+-   Epic management for organizing tickets into larger initiatives
+-   Comment system for tickets to facilitate team discussions
+-   Kanban board view for visualizing ticket progress
+-   Assign ticket to multi users
+-   User contributions chart
+-   Timeline view
+-   Export ticket data to CSV
+-   Leaderboard for team member performance
+-   External dashboard view (Client Portal)
 
 ## Requirements
 
-- PHP > 8.2+
-- Laravel 12
-- MySQL 8.0+ / PostgreSQL 12+
-- Composer
-
-![image](https://raw.githubusercontent.com/SeptiawanAjiP/dewakoding-project-management/refs/heads/main/image-2.jpeg)
-![image](https://raw.githubusercontent.com/SeptiawanAjiP/dewakoding-project-management/refs/heads/main/image-6.jpeg)
-![image](https://raw.githubusercontent.com/SeptiawanAjiP/dewakoding-project-management/refs/heads/main/image-7.jpeg)
-![image](https://raw.githubusercontent.com/SeptiawanAjiP/dewakoding-project-management/refs/heads/main/image-8.jpeg)
-![image](https://raw.githubusercontent.com/SeptiawanAjiP/dewakoding-project-management/refs/heads/main/image-9.jpeg)
-
+-   PHP > 8.2+
+-   Laravel 12
+-   MySQL 8.0+ / PostgreSQL 12+
+-   Composer
 
 ## Installation
 
 1. Clone the repository:
-   ```
-   git clone https://github.com/SeptiawanAjiP/dewakoding-project-management
-   cd dewakoding-project-management
-   ```
+
+    ```
+    git clone https://github.com/capilkerja/myPM
+    cd myPm
+    ```
 
 2. Install dependencies:
-   ```
-   composer install
-   npm install
-   ```
+
+    ```
+    composer install
+    npm install
+    ```
 
 3. Set up environment:
-   ```
-   cp .env.example .env
-   php artisan key:generate
-   ```
+
+    ```
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
 4. Configure database in `.env` file:
-   ```
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=dewakoding_project_management
-   DB_USERNAME=root
-   DB_PASSWORD=
-   ```
+
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=mypm
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
 5. Run migrations:
-   ```
-   php artisan migrate
-   ```
+
+    ```
+    php artisan migrate
+    ```
 
 6. Create storage link for file uploads
-   ```
-   php artisan storage:link
-   ```
+
+    ```
+    php artisan storage:link
+    ```
 
 7. Create a Filament admin user:
-   ```
-   php artisan make:filament-user
-   ```
+    ```
+    php artisan make:filament-user
+    ```
 8. Activate Role & Permission
-   ```
-   php artisan shield:setup
-   php artisan shield:install
-   php artisan shield:super-admin
-   ```
+
+    ```
+    php artisan shield:setup
+    php artisan shield:install
+    php artisan shield:super-admin
+    ```
 
 9. Start the development server:
-   ```
-   php artisan serve
-   ```
+    ```
+    php artisan serve
+    ```
 
 ## Usage
 
@@ -109,35 +105,35 @@ A Laravel Filament 3 application for managing projects with ticket management an
 
 The Board View offers a familiar kanban-style interface for ticket management:
 
-- Drag-and-drop tickets between status columns
-- Customize columns to match your team's process
-- Quick-edit functionality for updating tickets directly from the board
+-   Drag-and-drop tickets between status columns
+-   Customize columns to match your team's process
+-   Quick-edit functionality for updating tickets directly from the board
 
 ### Timeline View
 
 The Timeline feature provides a chronological perspective of your project work:
 
-- Visualize project roadmap with start and end dates
-- Track milestone completion across time periods
-- Easily identify scheduling conflicts or resource bottlenecks
+-   Visualize project roadmap with start and end dates
+-   Track milestone completion across time periods
+-   Easily identify scheduling conflicts or resource bottlenecks
 
 ### Epic Management
 
 Epics help organize related tickets into larger initiatives:
 
-- Group tickets by feature, release, or business objective
-- Track progress across multiple tickets
-- Set start and end dates for planning purposes
-- Visualize which tickets belong to which initiatives
+-   Group tickets by feature, release, or business objective
+-   Track progress across multiple tickets
+-   Set start and end dates for planning purposes
+-   Visualize which tickets belong to which initiatives
 
 ### Ticket Comments
 
 The comment system enhances team collaboration:
 
-- Team members can discuss tickets directly in the application
-- All comments are timestamped and attributed to users
-- Supports rich text formatting for improved readability
-- Enables better context sharing and decision documentation
+-   Team members can discuss tickets directly in the application
+-   All comments are timestamped and attributed to users
+-   Supports rich text formatting for improved readability
+-   Enables better context sharing and decision documentation
 
 ## Running with Laravel Octane and FrankenPHP
 
@@ -146,8 +142,9 @@ This project comes pre-configured with Laravel Octane and FrankenPHP for improve
 ### Prerequisites
 
 The required packages are already included in the project dependencies:
-- `laravel/octane` (in composer.json)
-- `chokidar` (in package.json for file watching)
+
+-   `laravel/octane` (in composer.json)
+-   `chokidar` (in package.json for file watching)
 
 They will be installed automatically when you run `composer install` and `npm install` during the standard installation process.
 
@@ -156,9 +153,10 @@ They will be installed automatically when you run `composer install` and `npm in
 #### Development Mode
 
 To run the application in development mode with auto-reloading, simply use the provided composer script:
-   ```
-   php artisan octane:start --server=frankenphp --watch
-   ```
+
+```
+php artisan octane:start --server=frankenphp --watch
+```
 
 ## License
 
