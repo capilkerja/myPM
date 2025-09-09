@@ -22,7 +22,9 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Devonab\FilamentEasyFooter\EasyFooterPlugin;
+use Filament\Actions\Action;
 use Illuminate\Support\HtmlString;
+use Orion\FilamentGreeter\GreeterPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -58,6 +60,21 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
+                GreeterPlugin::make()
+                    ->message(text: fn() => auth()->user()->hasRole('super_admin') ? __('Welcome my lord') : __('Welcome'))
+                    ->name(fn() => auth()->user()->name)
+                    ->title('MyDukcapil adalah aplikasi manajemen project yang bertujuan untuk memudahkan dalam tracking setiap kegiatan/ticket/tugas untuk mendukung tim Anda dalam mencapai tujuan Instansi Anda. Selamat tinggal lupa tugas.')
+                    // ->avatar(size: 'w-16 h-16', url: 'https://randomuser.me/api/portraits/men/1.jpg')
+                    ->avatar(size: 'w-16 h-16', enabled: true)
+                    ->action(
+                        Action::make('action')
+                            ->label('Hubungi Developer')
+                            ->icon('heroicon-o-chat-bubble-bottom-center')
+                            ->url('https://wa.me/6282137753892')
+                    )
+                    ->sort(-2)
+                    ->timeSensitive(morningStart: 6, afternoonStart: 12, eveningStart: 15, nightStart: 18)
+                    ->columnSpan('full'),
                 EasyFooterPlugin::make()
                     ->withSentence(new HtmlString('MyDukcapil v' . config('app.version') . ' - Made with ❤️ by <a href="#">RzPahlavi</a>'))
                     ->withLoadTime('This page loaded in'),

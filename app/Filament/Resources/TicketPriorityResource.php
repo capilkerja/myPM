@@ -23,7 +23,7 @@ class TicketPriorityResource extends Resource
 
     protected static ?string $pluralLabel = 'Ticket Priorities';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = 'Project Management';
 
     public static function form(Form $form): Form
     {

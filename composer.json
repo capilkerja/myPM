@@ -16,6 +16,7 @@
         "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.10.1",
         "maatwebsite/excel": "^3.1",
+        "oriondevelops/filament-greeter": "^0.2.2",
         "stechstudio/filament-impersonate": "^3.16"
     },
     "require-dev": {
