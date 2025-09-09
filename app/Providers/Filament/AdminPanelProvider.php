@@ -21,6 +21,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
+use Devonab\FilamentEasyFooter\EasyFooterPlugin;
+use Illuminate\Support\HtmlString;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -56,6 +58,9 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
+                EasyFooterPlugin::make()
+                    ->withSentence(new HtmlString('MyDukcapil v' . config('app.version') . ' - Made with ❤️ by <a href="#">RzPahlavi</a>'))
+                    ->withLoadTime('This page loaded in'),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
@@ -70,7 +75,8 @@ class AdminPanelProvider extends PanelProvider
                     ->avatarUploadComponent(fn() => FileUpload::make('avatar_url')->disk('public'))
                     ->enableTwoFactorAuthentication(
                         force: false,
-                    ),
+                    )
+                    ->enableBrowserSessions(condition: true),
                 FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([
