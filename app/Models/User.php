@@ -3,17 +3,23 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Panel;
+use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasRoles, Notifiable;
+    use HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +31,7 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
+        'avatar_url'
     ];
 
     /**
@@ -50,6 +57,12 @@ class User extends Authenticatable
         ];
     }
 
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
+
+
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'project_members')
@@ -66,7 +79,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Ticket::class, 'ticket_users');
     }
 
-     public function createdTickets(): HasMany
+    public function createdTickets(): HasMany
     {
         return $this->hasMany(Ticket::class, 'created_by');
     }
@@ -94,5 +107,9 @@ class User extends Authenticatable
     public function getUnreadNotificationsCountAttribute(): int
     {
         return $this->unreadNotifications()->count();
+    }
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url ? Storage::url($this->avatar_url) : null;
     }
 }

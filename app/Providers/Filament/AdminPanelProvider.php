@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -19,6 +20,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -54,13 +56,28 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
+                BreezyCore::make()
+                    ->myProfile(
+                        shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
+                        userMenuLabel: 'My Profile', // Customizes the 'account' link label in the panel User Menu (default = null)
+                        shouldRegisterNavigation: true, // Adds a main navigation item for the My Profile page (default = false)
+                        navigationGroup: 'Settings', // Sets the navigation group for the My Profile page (default = null)
+                        hasAvatars: true, // Enables the avatar upload form component (default = false)
+                        slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
+                    )
+                    ->avatarUploadComponent(fn($fileUpload) => $fileUpload->disableLabel())
+                    // OR, replace with your own component
+                    ->avatarUploadComponent(fn() => FileUpload::make('avatar_url')->disk('public'))
+                    ->enableTwoFactorAuthentication(
+                        force: false,
+                    ),
                 FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,
             ])
             ->passwordReset()
-            ->emailVerification()
-            ->profile();
+            ->emailVerification();
+        // ->profile();
     }
 }
