@@ -12,11 +12,14 @@ use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use App\Filament\Actions\ExportTicketsAction;
 use App\Exports\TicketsExport;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectBoard extends Page
 {
+    use HasPageShield;
+
     protected static ?string $navigationIcon = 'heroicon-o-view-columns';
     protected static string $view = 'filament.pages.project-board';
     protected static ?string $title = 'Project Board';
@@ -39,7 +42,7 @@ class ProjectBoard extends Page
     public ?Ticket $selectedTicket = null;
 
     public ?int $selectedProjectId = null;
-    
+
     public array $sortOrders = [];
 
     public function mount($project_id = null): void
@@ -94,30 +97,30 @@ class ProjectBoard extends Page
     {
         if (! $this->selectedProject) {
             $this->ticketStatuses = collect();
-    
+
             return;
         }
-    
+
         $this->ticketStatuses = $this->selectedProject->ticketStatuses()
             ->with(['tickets' => function ($query) {
-                 $query->with(['assignees', 'status', 'priority']);
-                 $query->orderBy('id', 'asc');
+                $query->with(['assignees', 'status', 'priority']);
+                $query->orderBy('id', 'asc');
             }])
             ->orderBy('sort_order')
             ->get();
-            
+
         $this->ticketStatuses->each(function ($status) {
             $sortOrder = $this->sortOrders[$status->id] ?? 'date_created_newest';
             $status->tickets = $this->applySorting($status->tickets, $sortOrder);
         });
     }
-    
+
     public function setSortOrder($statusId, $sortOrder)
     {
         $this->sortOrders[$statusId] = $sortOrder;
         $this->loadTicketStatuses();
     }
-    
+
     private function applySorting($tickets, $sortOrder)
     {
         switch ($sortOrder) {
@@ -190,7 +193,7 @@ class ProjectBoard extends Page
             return;
         }
 
-        
+
         $url = TicketResource::getUrl('view', ['record' => $ticketId]);
         $this->js("window.open('{$url}', '_blank')");
     }
@@ -223,21 +226,21 @@ class ProjectBoard extends Page
             Action::make('new_ticket')
                 ->label('New Ticket')
                 ->icon('heroicon-m-plus')
-                ->visible(fn () => $this->selectedProject !== null && auth()->user()->can('create_ticket'))
-                ->url(fn (): string => TicketResource::getUrl('create', [
+                ->visible(fn() => $this->selectedProject !== null && auth()->user()->can('create_ticket'))
+                ->url(fn(): string => TicketResource::getUrl('create', [
                     'project_id' => $this->selectedProject?->id,
                     'ticket_status_id' => $this->selectedProject?->ticketStatuses->first()?->id,
                 ]))
                 ->openUrlInNewTab(),
-    
+
             Action::make('refresh_board')
                 ->label('Refresh Board')
                 ->icon('heroicon-m-arrow-path')
                 ->action('refreshBoard')
                 ->color('warning'),
-            
+
             ExportTicketsAction::make()
-                ->visible(fn () => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin'])),
+                ->visible(fn() => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin'])),
         ];
     }
 
@@ -309,7 +312,7 @@ class ProjectBoard extends Page
         }
 
         $tickets = collect();
-        
+
         if ($this->selectedProject) {
             $tickets = $this->selectedProject->tickets()
                 ->with(['assignees', 'status', 'project', 'epic'])
@@ -319,7 +322,7 @@ class ProjectBoard extends Page
             $ticketIds = $this->ticketStatuses->flatMap(function ($status) {
                 return $status->tickets->pluck('id');
             });
-            
+
             $tickets = Ticket::whereIn('id', $ticketIds)
                 ->with(['assignees', 'status', 'project', 'epic'])
                 ->orderBy('created_at', 'asc')
@@ -356,13 +359,12 @@ class ProjectBoard extends Page
                         document.body.removeChild(a);
                     });
             ");
-            
+
             Notification::make()
                 ->title('Export Successful')
                 ->body('Your Excel file is being downloaded.')
                 ->success()
                 ->send();
-            
         } catch (\Exception $e) {
             Notification::make()
                 ->title('Export Failed')

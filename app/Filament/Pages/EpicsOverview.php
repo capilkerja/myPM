@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Epic;
 use App\Models\Project;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Collection;
@@ -11,6 +12,8 @@ use Livewire\Attributes\On;
 
 class EpicsOverview extends Page
 {
+    use HasPageShield;
+
     protected static ?string $navigationIcon = 'heroicon-o-flag';
     protected static string $view = 'filament.pages.epics-overview';
     protected static ?string $navigationGroup = 'Project Management';
@@ -83,14 +86,14 @@ class EpicsOverview extends Page
     public function updatedSelectedProjectId($value): void
     {
         $this->selectedProjectId = $value ? (int) $value : null;
-        
+
         if ($this->selectedProjectId) {
             $url = static::getUrl(['project_id' => $this->selectedProjectId]);
             $this->redirect($url);
         } else {
             $this->redirect(static::getUrl());
         }
-        
+
         $this->loadEpics();
         $this->expandedEpics = $this->epics->pluck('id')->toArray();
     }
@@ -113,7 +116,7 @@ class EpicsOverview extends Page
     {
         $tickets = $epic->tickets;
         $totalTickets = $tickets->count();
-        
+
         if ($totalTickets === 0) {
             return [
                 'total' => 0,
@@ -152,7 +155,7 @@ class EpicsOverview extends Page
         }
 
         $names = $ticket->assignees->pluck('name')->toArray();
-        
+
         if (count($names) <= 2) {
             return implode(', ', $names);
         }
