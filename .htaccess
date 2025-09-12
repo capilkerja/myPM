@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+# Block access to .env files
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block access to the storage directory
+RedirectMatch 403 ^/storage/
