@@ -25,6 +25,7 @@ use Devonab\FilamentEasyFooter\EasyFooterPlugin;
 use Filament\Actions\Action;
 use Illuminate\Support\HtmlString;
 use Orion\FilamentGreeter\GreeterPlugin;
+use Rmsramos\Activitylog\ActivitylogPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -60,6 +61,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
+                ActivitylogPlugin::make(),
                 GreeterPlugin::make()
                     ->message(text: fn() => auth()->user()->hasRole('super_admin') ? __('Welcome my lord') : __('Welcome'))
                     ->name(fn() => auth()->user()->name)
