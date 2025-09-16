@@ -19,7 +19,7 @@ class UserContributions extends Page implements HasForms
     use InteractsWithForms, HasPageShield;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar-square';
-    protected static ?string $navigationLabel = 'User Contributions';
+    protected static ?string $navigationLabel = 'Kontribusi Pengguna';
     protected static ?string $title = 'User Contributions';
     protected static ?int $navigationSort = 5;
     protected static string $view = 'filament.pages.user-contributions';

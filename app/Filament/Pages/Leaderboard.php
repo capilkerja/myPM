@@ -18,7 +18,7 @@ class Leaderboard extends Page implements HasForms
     use InteractsWithForms, HasPageShield;
 
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
-    protected static ?string $navigationLabel = 'Leaderboard';
+    protected static ?string $navigationLabel = 'Perangkingan';
     protected static ?string $title = 'Contribution Leaderboard';
     protected static ?int $navigationSort = 6;
     protected static string $view = 'filament.pages.leaderboard';

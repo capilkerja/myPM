@@ -23,6 +23,7 @@ class ProjectResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationLabel = 'Project';
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -51,8 +52,8 @@ class ProjectResource extends Resource
                     ->helperText('Create standard Backlog, To Do, In Progress, Review, and Done statuses automatically')
                     ->default(true)
                     ->dehydrated(false)
-                    ->visible(fn ($livewire) => $livewire instanceof Pages\CreateProject),
-                
+                    ->visible(fn($livewire) => $livewire instanceof Pages\CreateProject),
+
                 Forms\Components\Toggle::make('is_pinned')
                     ->label('Pin Project')
                     ->helperText('Pinned projects will appear in the dashboard timeline')
@@ -72,7 +73,7 @@ class ProjectResource extends Resource
                     ->label('Pinned Date')
                     ->native(false)
                     ->displayFormat('d/m/Y H:i')
-                    ->visible(fn ($get) => $get('is_pinned'))
+                    ->visible(fn($get) => $get('is_pinned'))
                     ->dehydrated(true),
             ]);
     }
@@ -91,11 +92,9 @@ class ProjectResource extends Resource
                         return $record->progress_percentage . '%';
                     })
                     ->badge()
-                    ->color(fn (Project $record): string => 
-                        $record->progress_percentage >= 100 ? 'success' :
-                        ($record->progress_percentage >= 75 ? 'info' :
-                        ($record->progress_percentage >= 50 ? 'warning' :
-                        ($record->progress_percentage >= 25 ? 'gray' : 'danger')))
+                    ->color(
+                        fn(Project $record): string =>
+                        $record->progress_percentage >= 100 ? 'success' : ($record->progress_percentage >= 75 ? 'info' : ($record->progress_percentage >= 50 ? 'warning' : ($record->progress_percentage >= 25 ? 'gray' : 'danger')))
                     )
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
@@ -110,14 +109,13 @@ class ProjectResource extends Resource
                         if (!$record->end_date) {
                             return null;
                         }
-                        
+
                         return $record->remaining_days . ' days';
                     })
                     ->badge()
-                    ->color(fn (Project $record): string => 
-                        !$record->end_date ? 'gray' :
-                        ($record->remaining_days <= 0 ? 'danger' : 
-                        ($record->remaining_days <= 7 ? 'warning' : 'success'))
+                    ->color(
+                        fn(Project $record): string =>
+                        !$record->end_date ? 'gray' : ($record->remaining_days <= 0 ? 'danger' : ($record->remaining_days <= 7 ? 'warning' : 'success'))
                     ),
                 Tables\Columns\ToggleColumn::make('is_pinned')
                     ->label('Pinned')

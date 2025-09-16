@@ -19,7 +19,7 @@ class TicketPriorityResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-flag';
 
-    protected static ?string $navigationLabel = 'Ticket Priorities';
+    protected static ?string $navigationLabel = 'Prioritas Ticket';
 
     protected static ?string $pluralLabel = 'Ticket Priorities';
 
