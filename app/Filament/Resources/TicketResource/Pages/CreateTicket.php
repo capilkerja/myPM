@@ -8,6 +8,7 @@ use Filament\Resources\Pages\CreateRecord;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Ticket;
+use App\Notifications\NewTicketAssigned;
 
 class CreateTicket extends CreateRecord
 {
@@ -116,6 +117,33 @@ class CreateTicket extends CreateRecord
         }
 
         return $ticket;
+    }
+
+    // protected function afterCreate(): void
+    // {
+    //     // setelah ticket dibuat
+    //     $ticket = $this->record; // atau $ticket = Ticket::latest()->first();
+
+    //     if ($ticket->assignee && $ticket->assignee->telegram_chat_id) {
+    //         $ticket->assignee->notify(new NewTicketAssigned($ticket));
+    //     }
+    // }
+
+    protected function afterCreate(): void
+    {
+        $ticket = $this->record;
+
+        // Ambil semua petugas yang ditugaskan (assignees)
+        $assignees = $ticket->assignees;
+
+        // Lakukan perulangan untuk setiap petugas
+        foreach ($assignees as $assignee) {
+            // Cek apakah petugas memiliki telegram_chat_id
+            if ($assignee && $assignee->telegram_chat_id) {
+                // Kirim notifikasi ke petugas
+                $assignee->notify(new NewTicketAssigned($ticket));
+            }
+        }
     }
 
     protected function getRedirectUrl(): string
