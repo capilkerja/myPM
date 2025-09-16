@@ -6,7 +6,6 @@
 /storage/*.key
 /storage/pail
 /vendor
-/config/services.php
 .env
 .env.backup
 .env.production
