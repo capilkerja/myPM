@@ -21,7 +21,7 @@ return [
                     'actions' => [
 
                         'add' => [
-                            'label' => 'Add',
+                            'label' => 'Tambah',
                         ],
 
                     ],
@@ -51,12 +51,12 @@ return [
             ],
 
             'delete' => [
-                'label' => 'Delete',
+                'label' => 'Hapus',
             ],
 
             'edit' => [
 
-                'label' => 'Edit',
+                'label' => 'Ubah',
 
                 'modal' => [
 
@@ -65,7 +65,7 @@ return [
                     'actions' => [
 
                         'save' => [
-                            'label' => 'Save changes',
+                            'label' => 'Simpan Perubahan',
                         ],
 
                     ],

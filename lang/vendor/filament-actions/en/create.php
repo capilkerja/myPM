@@ -13,11 +13,11 @@ return [
             'actions' => [
 
                 'create' => [
-                    'label' => 'Create',
+                    'label' => 'Buat',
                 ],
 
                 'create_another' => [
-                    'label' => 'Create & create another',
+                    'label' => 'Buat & buat lagi',
                 ],
 
             ],
@@ -27,7 +27,7 @@ return [
         'notifications' => [
 
             'created' => [
-                'title' => 'Created',
+                'title' => 'Berhasil ditambahkan',
             ],
 
         ],

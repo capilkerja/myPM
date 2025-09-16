@@ -4,7 +4,7 @@ return [
 
     'single' => [
 
-        'label' => 'Delete',
+        'label' => 'Hapus',
 
         'modal' => [
 
@@ -13,7 +13,7 @@ return [
             'actions' => [
 
                 'delete' => [
-                    'label' => 'Delete',
+                    'label' => 'Hapus',
                 ],
 
             ],
@@ -23,7 +23,7 @@ return [
         'notifications' => [
 
             'deleted' => [
-                'title' => 'Deleted',
+                'title' => 'Berhasil dihapus',
             ],
 
         ],

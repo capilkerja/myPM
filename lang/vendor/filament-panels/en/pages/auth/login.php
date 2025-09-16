@@ -4,7 +4,7 @@ return [
 
     'title' => 'Login',
 
-    'heading' => 'Sign in',
+    'heading' => 'Masuk Ke Akun Anda',
 
     'actions' => [
 
@@ -22,7 +22,7 @@ return [
     'form' => [
 
         'email' => [
-            'label' => 'Email address',
+            'label' => 'Alamat Email',
         ],
 
         'password' => [
@@ -30,13 +30,13 @@ return [
         ],
 
         'remember' => [
-            'label' => 'Remember me',
+            'label' => 'Ingat Saya',
         ],
 
         'actions' => [
 
             'authenticate' => [
-                'label' => 'Sign in',
+                'label' => 'Masuk',
             ],
 
         ],

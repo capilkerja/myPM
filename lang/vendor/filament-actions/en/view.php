@@ -4,7 +4,7 @@ return [
 
     'single' => [
 
-        'label' => 'View',
+        'label' => 'Lihat',
 
         'modal' => [
 
@@ -13,7 +13,7 @@ return [
             'actions' => [
 
                 'close' => [
-                    'label' => 'Close',
+                    'label' => 'Kembali',
                 ],
 
             ],

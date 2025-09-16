@@ -4,18 +4,18 @@ return [
 
     'title' => 'Edit :label',
 
-    'breadcrumb' => 'Edit',
+    'breadcrumb' => 'Ubah',
 
     'form' => [
 
         'actions' => [
 
             'cancel' => [
-                'label' => 'Cancel',
+                'label' => 'Batal',
             ],
 
             'save' => [
-                'label' => 'Save changes',
+                'label' => 'Simpan Perubahan',
             ],
 
         ],
@@ -25,7 +25,7 @@ return [
     'content' => [
 
         'tab' => [
-            'label' => 'Edit',
+            'label' => 'Ubah',
         ],
 
     ],
@@ -33,7 +33,7 @@ return [
     'notifications' => [
 
         'saved' => [
-            'title' => 'Saved',
+            'title' => 'Berhasil diperbarui',
         ],
 
     ],

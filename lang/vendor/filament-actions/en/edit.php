@@ -4,7 +4,7 @@ return [
 
     'single' => [
 
-        'label' => 'Edit',
+        'label' => 'Ubah',
 
         'modal' => [
 
@@ -13,7 +13,7 @@ return [
             'actions' => [
 
                 'save' => [
-                    'label' => 'Save changes',
+                    'label' => 'Simpan Perubahan',
                 ],
 
             ],
@@ -23,7 +23,7 @@ return [
         'notifications' => [
 
             'saved' => [
-                'title' => 'Saved',
+                'title' => 'Berhasil diperbarui',
             ],
 
         ],

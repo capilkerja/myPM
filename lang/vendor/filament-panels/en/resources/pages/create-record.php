@@ -4,22 +4,22 @@ return [
 
     'title' => 'Create :label',
 
-    'breadcrumb' => 'Create',
+    'breadcrumb' => 'Tambah',
 
     'form' => [
 
         'actions' => [
 
             'cancel' => [
-                'label' => 'Cancel',
+                'label' => 'Batal',
             ],
 
             'create' => [
-                'label' => 'Create',
+                'label' => 'Tambah',
             ],
 
             'create_another' => [
-                'label' => 'Create & create another',
+                'label' => 'Buat & buat lagi',
             ],
 
         ],
@@ -29,7 +29,7 @@ return [
     'notifications' => [
 
         'created' => [
-            'title' => 'Created',
+            'title' => 'Berhasil dibuat',
         ],
 
     ],

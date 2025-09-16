@@ -4,12 +4,12 @@ return [
 
     'title' => 'View :label',
 
-    'breadcrumb' => 'View',
+    'breadcrumb' => 'Lihat',
 
     'content' => [
 
         'tab' => [
-            'label' => 'View',
+            'label' => 'Lihat',
         ],
 
     ],
