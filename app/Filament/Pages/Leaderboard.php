@@ -19,7 +19,7 @@ class Leaderboard extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
     protected static ?string $navigationLabel = 'Perangkingan';
-    protected static ?string $title = 'Contribution Leaderboard';
+    protected static ?string $title = 'Ranking Kontributor';
     protected static ?int $navigationSort = 6;
     protected static string $view = 'filament.pages.leaderboard';
     protected static ?string $navigationGroup = 'Analytics';
@@ -30,7 +30,7 @@ class Leaderboard extends Page implements HasForms
 
     public function getSubheading(): ?string
     {
-        return 'Top contributors ranked by their overall activity and engagement';
+        return 'Daftar kontributor paling aktif berdasarkan total aktivitas dan interaksi mereka.';
     }
 
     public function setTimeRange(string $range): void
