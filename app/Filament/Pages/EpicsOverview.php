@@ -18,12 +18,12 @@ class EpicsOverview extends Page
     protected static string $view = 'filament.pages.epics-overview';
     protected static ?string $navigationGroup = 'Project Management';
     protected static ?string $navigationLabel = 'Epic';
-    protected static ?string $title = 'Epics Overview';
+    protected static ?string $title = 'Ringkasan Epic';
     protected static ?int $navigationSort = 7;
 
     public function getSubheading(): ?string
     {
-        return 'Manage and track project epics with their associated tickets and progress';
+        return 'Kelola dan pantau epic project beserta ticket dan progres yang terkait.';
     }
 
     protected static ?string $slug = 'epics-overview/{project_id?}';
@@ -44,8 +44,8 @@ class EpicsOverview extends Page
             $this->selectedProjectId = (int) $project_id;
         } elseif ($project_id && !$this->availableProjects->contains('id', $project_id)) {
             Notification::make()
-                ->title('Project Not Found')
-                ->body('The selected project was not found or you do not have access to it.')
+                ->title('Project Tidak Ditemukan')
+                ->body('Project yang dipilih tidak ditemukan atau kamu tidak memiliki akses ke project tersebut.')
                 ->danger()
                 ->send();
             $this->redirect(static::getUrl());
