@@ -7,10 +7,41 @@ use App\Models\Project;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Ticket;
 
 class CreateTicket extends CreateRecord
 {
     protected static string $resource = TicketResource::class;
+
+    protected function fillForm(): void
+    {
+        $copyFromId = request()->query('copy_from');
+        if ($copyFromId) {
+            $ticket = Ticket::find($copyFromId);
+            if ($ticket) {
+                $data = $ticket->toArray();
+
+                // Hapus field yang tidak boleh ikut ke tiket baru
+                unset(
+                    $data['id'],
+                    $data['uuid'],
+                    $data['created_at'],
+                    $data['updated_at'],
+                    $data['created_by']
+                );
+                $data['assignees'] = $ticket->assignees()->pluck('users.id')->toArray();
+
+                // isi form dengan data hasil copy
+
+                $this->form->fill($data);
+                return;
+            }
+        }
+        // fallback ke default behaviour
+        parent::fillForm();
+    }
+
+
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
@@ -28,26 +59,26 @@ class CreateTicket extends CreateRecord
         // Handle assignees validation and assignment
         if (!empty($data['assignees']) && !empty($data['project_id'])) {
             $project = Project::find($data['project_id']);
-            
+
             if ($project) {
                 $validAssignees = [];
                 $invalidAssignees = [];
-                
+
                 foreach ($data['assignees'] as $userId) {
                     $isMember = $project->members()->where('users.id', $userId)->exists();
-                    
+
                     if ($isMember) {
                         $validAssignees[] = $userId;
                     } else {
                         $invalidAssignees[] = $userId;
                     }
                 }
-                
+
                 // Assign only valid users
                 if (!empty($validAssignees)) {
                     $ticket->assignees()->sync($validAssignees);
                 }
-                
+
                 // Show warning if some users were invalid
                 if (!empty($invalidAssignees)) {
                     Notification::make()
@@ -56,14 +87,14 @@ class CreateTicket extends CreateRecord
                         ->body('Some selected users are not members of this project and have been removed from assignees.')
                         ->send();
                 }
-                
+
                 // If no valid assignees, assign current user if they're a member
                 if (empty($validAssignees)) {
                     $currentUserIsMember = $project->members()->where('users.id', auth()->id())->exists();
-                    
+
                     if ($currentUserIsMember) {
                         $ticket->assignees()->sync([auth()->id()]);
-                        
+
                         Notification::make()
                             ->info()
                             ->title('Auto-assigned')
@@ -77,7 +108,7 @@ class CreateTicket extends CreateRecord
             if (!empty($data['project_id'])) {
                 $project = Project::find($data['project_id']);
                 $currentUserIsMember = $project?->members()->where('users.id', auth()->id())->exists();
-                
+
                 if ($currentUserIsMember) {
                     $ticket->assignees()->sync([auth()->id()]);
                 }

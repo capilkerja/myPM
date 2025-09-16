@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Epic;
@@ -35,8 +36,8 @@ class TicketResource extends Resource
         if (! auth()->user()->hasRole(['super_admin'])) {
             $query->where(function ($query) {
                 $query->whereHas('assignees', function ($query) {
-                        $query->where('users.id', auth()->id());
-                    })
+                    $query->where('users.id', auth()->id());
+                })
                     ->orWhere('created_by', auth()->id())
                     ->orWhereHas('project.members', function ($query) {
                         $query->where('users.id', auth()->id());
@@ -102,11 +103,11 @@ class TicketResource extends Resource
                     ->label('Epic')
                     ->options(function (callable $get) {
                         $projectId = $get('project_id');
-                        
+
                         if (!$projectId) {
                             return [];
                         }
-                        
+
                         return Epic::where('project_id', $projectId)
                             ->pluck('name', 'id')
                             ->toArray();
@@ -114,7 +115,7 @@ class TicketResource extends Resource
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->hidden(fn (callable $get): bool => !$get('project_id')),
+                    ->hidden(fn(callable $get): bool => !$get('project_id')),
 
                 Forms\Components\TextInput::make('name')
                     ->label('Ticket Name')
@@ -152,13 +153,13 @@ class TicketResource extends Resource
                     ->searchable()
                     ->preload()
                     ->helperText('Select multiple users to assign this ticket to. Only project members can be assigned.')
-                    ->hidden(fn (callable $get): bool => !$get('project_id'))
+                    ->hidden(fn(callable $get): bool => !$get('project_id'))
                     ->live(),
-                
+
                 Forms\Components\DatePicker::make('start_date')
                     ->label('Start Date')
                     ->nullable(),
-                
+
                 Forms\Components\DatePicker::make('due_date')
                     ->label('Due Date')
                     ->nullable(),
@@ -197,7 +198,7 @@ class TicketResource extends Resource
                 Tables\Columns\TextColumn::make('priority.name')
                     ->label('Priority')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'High' => 'danger',
                         'Medium' => 'warning',
                         'Low' => 'success',
@@ -231,7 +232,7 @@ class TicketResource extends Resource
                     ->label('Due Date')
                     ->date()
                     ->sortable(),
-                    
+
                 Tables\Columns\TextColumn::make('epic.name')
                     ->label('Epic')
                     ->sortable()
@@ -251,37 +252,37 @@ class TicketResource extends Resource
                         if (auth()->user()->hasRole(['super_admin'])) {
                             return Project::pluck('name', 'id')->toArray();
                         }
-            
+
                         return auth()->user()->projects()->pluck('name', 'projects.id')->toArray();
                     })
                     ->searchable()
                     ->preload(),
-            
+
                 Tables\Filters\SelectFilter::make('ticket_status_id')
                     ->label('Status')
                     ->options(function () {
                         $projectId = request()->input('tableFilters.project_id');
-                        
+
                         if (!$projectId) {
                             return [];
                         }
-                        
+
                         return TicketStatus::where('project_id', $projectId)
                             ->pluck('name', 'id')
                             ->toArray();
                     })
                     ->searchable()
                     ->preload(),
-                    
+
                 Tables\Filters\SelectFilter::make('epic_id')
                     ->label('Epic')
                     ->options(function () {
                         $projectId = request()->input('tableFilters.project_id');
-                        
+
                         if (!$projectId) {
                             return [];
                         }
-                        
+
                         return Epic::where('project_id', $projectId)
                             ->pluck('name', 'id')
                             ->toArray();
@@ -309,7 +310,7 @@ class TicketResource extends Resource
                     ->relationship('creator', 'name')
                     ->searchable()
                     ->preload(),
-            
+
                 Tables\Filters\Filter::make('due_date')
                     ->form([
                         Forms\Components\DatePicker::make('due_from'),
@@ -319,11 +320,11 @@ class TicketResource extends Resource
                         return $query
                             ->when(
                                 $data['due_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('due_date', '>=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('due_date', '>=', $date),
                             )
                             ->when(
                                 $data['due_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('due_date', '<=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('due_date', '<=', $date),
                             );
                     }),
             ])
@@ -331,6 +332,19 @@ class TicketResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Action::make('copy')
+                    ->label('Copy')
+                    ->icon('heroicon-o-document-duplicate')
+                    ->color('info')
+                    ->action(function ($record, $livewire) {
+
+                        // Redirect ke halaman create, dengan parameter copy_from
+                        return $livewire->redirect(
+                            static::getUrl('create', [
+                                'copy_from' => $record->id,
+                            ])
+                        );
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -342,9 +356,7 @@ class TicketResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-
-        ];
+        return [];
     }
 
     public static function getPages(): array
