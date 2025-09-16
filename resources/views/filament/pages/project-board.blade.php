@@ -10,11 +10,11 @@
                     stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
-                <span>{{ $selectedProject ? $selectedProject->name : 'Select Project' }}</span>
+                <span>{{ $selectedProject ? $selectedProject->name : 'Pilih Project' }}</span>
                 @if ($selectedProject)
                     <span
                         class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
-                        Selected
+                        Dipilih
                     </span>
                 @endif
             </button>
@@ -30,14 +30,14 @@
             <x-filament::section>
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                     <h2 class="text-lg font-medium text-gray-900 dark:text-white">
-                        Choose Project
+                        Pilih Project
                     </h2>
 
                     <div class="w-full sm:w-auto">
                         <x-filament::input.wrapper>
                             <x-filament::input.select wire:model.live="selectedProjectId" class="w-full"
                                 @change="showProjectSelector = false">
-                                <option value="">Select Project</option>
+                                <option value="">Pilih Project</option>
                                 @foreach ($projects as $project)
                                     <option value="{{ $project->id }}"
                                         {{ $selectedProjectId == $project->id ? 'selected' : '' }}>
@@ -59,19 +59,19 @@
             touchStartX: 0,
             touchStartY: 0,
             scrollStartX: 0,
-
+        
             init() {
                 this.$nextTick(() => {
                     this.removeAllEventListeners();
                     this.attachAllEventListeners();
                     this.setupTouchScrolling();
                     this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
+        
                     // Add listeners for when user returns to the board
                     this.setupPageVisibilityListener();
                 });
             },
-
+        
             setupPageVisibilityListener() {
                 // Listen for page visibility changes (when user returns to tab)
                 document.addEventListener('visibilitychange', () => {
@@ -83,7 +83,7 @@
                         }, 100);
                     }
                 });
-
+        
                 // Listen for window focus (when user returns to window)
                 window.addEventListener('focus', () => {
                     // Window is focused again, reinitialize drag and drop
@@ -92,7 +92,7 @@
                         this.attachAllEventListeners();
                     }, 100);
                 });
-
+        
                 // Listen for popstate event (when user navigates back)
                 window.addEventListener('popstate', () => {
                     // User navigated back, reinitialize drag and drop
@@ -101,7 +101,7 @@
                         this.attachAllEventListeners();
                     }, 200);
                 });
-
+        
                 // Listen for Livewire lifecycle events
                 document.addEventListener('livewire:navigated', () => {
                     // Livewire navigated, reinitialize drag and drop
@@ -110,7 +110,7 @@
                         this.attachAllEventListeners();
                     }, 300);
                 });
-
+        
                 // Listen for Livewire load and update events
                 document.addEventListener('livewire:load', () => {
                     setTimeout(() => {
@@ -118,7 +118,7 @@
                         this.attachAllEventListeners();
                     }, 100);
                 });
-
+        
                 // Listen for Livewire update events
                 document.addEventListener('livewire:updated', () => {
                     setTimeout(() => {
@@ -126,7 +126,7 @@
                         this.attachAllEventListeners();
                     }, 100);
                 });
-
+        
                 // Listen for custom board events
                 window.addEventListener('ticket-updated', () => {
                     setTimeout(() => {
@@ -134,7 +134,7 @@
                         this.attachAllEventListeners();
                     }, 150);
                 });
-
+        
                 // Periodic check to ensure drag and drop is working
                 setInterval(() => {
                     if (document.visibilityState === 'visible') {
@@ -142,44 +142,44 @@
                     }
                 }, 2000);
             },
-
+        
             ensureDragDropInitialized() {
                 // Check if any ticket cards exist but are not draggable
                 const tickets = document.querySelectorAll('.ticket-card');
                 let needsReinitialization = false;
-
+        
                 tickets.forEach(ticket => {
                     if (!ticket.getAttribute('draggable') || ticket.getAttribute('draggable') !== 'true') {
                         needsReinitialization = true;
                     }
                 });
-
+        
                 // If any tickets are not draggable, reinitialize
                 if (needsReinitialization && tickets.length > 0) {
                     this.removeAllEventListeners();
                     this.attachAllEventListeners();
                 }
             },
-
+        
             setupTouchScrolling() {
                 const container = document.getElementById('board-container');
-
+        
                 container.addEventListener('touchstart', (e) => {
                     this.touchStartX = e.touches[0].clientX;
                     this.touchStartY = e.touches[0].clientY;
                     this.scrollStartX = container.scrollLeft;
                 }, { passive: true });
-
+        
                 container.addEventListener('touchmove', (e) => {
                     if (e.touches.length !== 1) return;
-
+        
                     const touchX = e.touches[0].clientX;
                     const touchY = e.touches[0].clientY;
-
+        
                     // Calculate both horizontal and vertical movement
                     const moveX = this.touchStartX - touchX;
                     const moveY = this.touchStartY - touchY;
-
+        
                     // If horizontal movement is greater than vertical movement, prevent default scrolling
                     if (Math.abs(moveX) > Math.abs(moveY)) {
                         e.preventDefault();
@@ -187,7 +187,7 @@
                     }
                 }, { passive: false });
             },
-
+        
             removeAllEventListeners() {
                 const tickets = document.querySelectorAll('.ticket-card');
                 tickets.forEach(ticket => {
@@ -195,75 +195,75 @@
                     const newTicket = ticket.cloneNode(true);
                     ticket.parentNode.replaceChild(newTicket, ticket);
                 });
-
+        
                 const columns = document.querySelectorAll('.status-column');
                 columns.forEach(column => {
                     const newColumn = column.cloneNode(false);
-
+        
                     while (column.firstChild) {
                         newColumn.appendChild(column.firstChild);
                     }
-
+        
                     if (column.parentNode) {
                         column.parentNode.replaceChild(newColumn, column);
                     }
                 });
             },
-
+        
             attachAllEventListeners() {
                 // Check permission before attaching drag events
                 // If user cannot move tickets, don't attach drag and drop listeners
                 @if(!$this->canMoveTickets())
                 return; // Exit early if user doesn't have permission to move tickets
                 @endif
-
+        
                 const tickets = document.querySelectorAll('.ticket-card');
                 tickets.forEach(ticket => {
                     // Enable dragging only for users with proper permissions
                     ticket.setAttribute('draggable', true);
-
+        
                     ticket.addEventListener('dragstart', (e) => {
                         this.draggingTicket = ticket.getAttribute('data-ticket-id');
                         ticket.classList.add('opacity-50');
                         e.dataTransfer.effectAllowed = 'move';
                     });
-
+        
                     ticket.addEventListener('dragend', () => {
                         ticket.classList.remove('opacity-50');
                         this.draggingTicket = null;
                     });
-
+        
                     // Touch events for mobile drag and drop
                     let longPressTimer;
                     let isDragging = false;
                     let originalColumn;
-
+        
                     ticket.addEventListener('touchstart', (e) => {
                         // Only proceed if not already scrolling
                         if (isDragging) return;
-
+        
                         longPressTimer = setTimeout(() => {
                             originalColumn = ticket.closest('.status-column');
                             this.draggingTicket = ticket.getAttribute('data-ticket-id');
                             ticket.classList.add('opacity-50', 'relative', 'z-30');
                             isDragging = true;
-
+        
                             // Visual feedback
                             ticket.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
                         }, 500); // 500ms long press
                     }, { passive: true });
-
+        
                     ticket.addEventListener('touchmove', (e) => {
                         if (!isDragging) {
                             // If not dragging, clear the timer to prevent entering drag mode
                             clearTimeout(longPressTimer);
                             return;
                         }
-
+        
                         // Move the ticket with touch
                         const touch = e.touches[0];
                         const columns = document.querySelectorAll('.status-column');
-
+        
                         // Find column under touch position
                         let targetColumn = null;
                         columns.forEach(column => {
@@ -279,20 +279,20 @@
                             }
                         });
                     });
-
+        
                     ticket.addEventListener('touchend', (e) => {
                         clearTimeout(longPressTimer);
-
+        
                         if (!isDragging) return;
-
+        
                         isDragging = false;
                         ticket.classList.remove('opacity-50', 'relative', 'z-30');
                         ticket.style.boxShadow = '';
-
+        
                         // Find column under final touch position
                         const touch = e.changedTouches[0];
                         const columns = document.querySelectorAll('.status-column');
-
+        
                         let targetColumn = null;
                         columns.forEach(column => {
                             const rect = column.getBoundingClientRect();
@@ -304,11 +304,11 @@
                             }
                             column.classList.remove('bg-primary-50', 'dark:bg-primary-950');
                         });
-
+        
                         if (targetColumn && targetColumn !== originalColumn) {
                             const statusId = targetColumn.getAttribute('data-status-id');
                             const ticketId = this.draggingTicket;
-
+        
                             const componentId = document.querySelector('[wire\\:id]').getAttribute('wire:id');
                             if (componentId) {
                                 Livewire.find(componentId).moveTicket(
@@ -317,25 +317,25 @@
                                 );
                             }
                         }
-
+        
                         this.draggingTicket = null;
                     });
-
+        
                     ticket.addEventListener('touchcancel', () => {
                         clearTimeout(longPressTimer);
                         if (!isDragging) return;
-
+        
                         isDragging = false;
                         ticket.classList.remove('opacity-50', 'relative', 'z-30');
                         ticket.style.boxShadow = '';
                         this.draggingTicket = null;
-
+        
                         document.querySelectorAll('.status-column').forEach(column => {
                             column.classList.remove('bg-primary-50', 'dark:bg-primary-950');
                         });
                     });
                 });
-
+        
                 // Attach drag and drop listeners to columns
                 const columns = document.querySelectorAll('.status-column');
                 columns.forEach(column => {
@@ -344,20 +344,20 @@
                         e.dataTransfer.dropEffect = 'move';
                         column.classList.add('bg-primary-50', 'dark:bg-primary-950');
                     });
-
+        
                     column.addEventListener('dragleave', () => {
                         column.classList.remove('bg-primary-50', 'dark:bg-primary-950');
                     });
-
+        
                     column.addEventListener('drop', (e) => {
                         e.preventDefault();
                         column.classList.remove('bg-primary-50', 'dark:bg-primary-950');
-
+        
                         if (this.draggingTicket) {
                             const statusId = column.getAttribute('data-status-id');
                             const ticketId = this.draggingTicket;
                             this.draggingTicket = null;
-
+        
                             const componentId = document.querySelector('[wire\\:id]').getAttribute('wire:id');
                             if (componentId) {
                                 Livewire.find(componentId).moveTicket(
@@ -419,8 +419,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
-                        <span class="text-sm font-medium">View Only Mode</span>
-                        <span class="text-xs opacity-75">You can view tickets but cannot move them</span>
+                        <span class="text-sm font-medium">Mode Lihat Saja</span>
+                        <span class="text-xs opacity-75">Anda bisa melihat ticket namun tidak dapat
+                            memindahkannya.</span>
                     </div>
                 </div>
             @endif
@@ -490,29 +491,29 @@
                                                     wire:click="setSortOrder({{ $status->id }}, 'date_created_newest')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded">
-                                                    Date created (newest first)
+                                                    Tanggal Dibuat (terbaru pertama)
                                                 </button>
                                                 <button
                                                     wire:click="setSortOrder({{ $status->id }}, 'date_created_oldest')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded">
-                                                    Date created (oldest first)
+                                                    Tanggal Dibuat (terlama pertama)
                                                 </button>
                                                 <button
                                                     wire:click="setSortOrder({{ $status->id }}, 'card_name_alphabetical')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded">
-                                                    Card name (alphabetically)
+                                                    Nama Tiket (secara abjad)
                                                 </button>
                                                 <button wire:click="setSortOrder({{ $status->id }}, 'due_date')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded">
-                                                    Due date
+                                                    Deadline
                                                 </button>
                                                 <button wire:click="setSortOrder({{ $status->id }}, 'priority')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded">
-                                                    Priority
+                                                    Prioritas
                                                 </button>
                                             </div>
                                         </div>
@@ -593,7 +594,7 @@
                                                         d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                                                         clip-rule="evenodd" />
                                                 </svg>
-                                                <span class="text-xs font-medium">Unassigned</span>
+                                                <span class="text-xs font-medium">Tanpa Petugas</span>
                                             </div>
                                         @endif
 
@@ -608,7 +609,7 @@
                             @if ($status->tickets->isEmpty())
                                 <div
                                     class="flex items-center justify-center h-24 text-gray-500 dark:text-gray-400 text-sm italic border border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
-                                    No tickets
+                                    Tidak ada ticket
                                 </div>
                             @else
                                 <!-- Loading indicator for more tickets -->
@@ -622,7 +623,7 @@
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                             </path>
                                         </svg>
-                                        <span>Loading more tickets...</span>
+                                        <span>Memuat lebih banyak tiket...</span>
                                     </div>
                                 </div>
                             @endif
@@ -632,7 +633,7 @@
 
                 @if ($ticketStatuses->isEmpty())
                     <div class="w-full flex items-center justify-center h-40 text-gray-500 dark:text-gray-400">
-                        No status columns found for this project
+                        Tidak ditemukan status untuk proyek ini.
                     </div>
                 @endif
             </div>
@@ -642,9 +643,9 @@
             <div class="flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 p-6">
                 <x-heroicon-o-view-columns class="w-16 h-16 text-gray-400 dark:text-gray-500" />
             </div>
-            <h2 class="text-xl font-medium text-gray-600 dark:text-gray-300">Please select a project first</h2>
+            <h2 class="text-xl font-medium text-gray-600 dark:text-gray-300">Pilih project terlebih dahulu</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                Select a project from the dropdown above to view the board
+                pilih project dari dropdown di atas untuk melihat daftar ticket.
             </p>
         </div>
     @endif

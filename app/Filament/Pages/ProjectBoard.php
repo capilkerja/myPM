@@ -30,7 +30,7 @@ class ProjectBoard extends Page
 
     public function getSubheading(): ?string
     {
-        return 'Kanban board for ticket management';
+        return 'Kanban board untuk manajemen ticket';
     }
     protected static ?string $slug = 'project-board/{project_id?}';
 
@@ -63,7 +63,7 @@ class ProjectBoard extends Page
             $this->loadTicketStatuses();
         } elseif ($this->projects->isNotEmpty() && ! is_null($project_id)) {
             Notification::make()
-                ->title('Project Not Found')
+                ->title('Project Tidak Ditemukan')
                 ->danger()
                 ->send();
             $this->redirect(static::getUrl());
@@ -181,8 +181,8 @@ class ProjectBoard extends Page
         if ($ticket && $ticket->project_id === $this->selectedProject?->id) {
             if (!$this->canManageTicket($ticket)) {
                 Notification::make()
-                    ->title('Permission Denied')
-                    ->body('You do not have permission to move this ticket.')
+                    ->title('Izin Ditolak')
+                    ->body('Anda tidak memiliki izin untuk memindahkan tiket ini.')
                     ->danger()
                     ->send();
                 return;
@@ -199,7 +199,7 @@ class ProjectBoard extends Page
             $this->dispatch('ticket-updated');
 
             Notification::make()
-                ->title('Ticket Updated')
+                ->title('Ticket Diperbarui')
                 ->success()
                 ->send();
         }
@@ -237,7 +237,7 @@ class ProjectBoard extends Page
 
         if (! $ticket) {
             Notification::make()
-                ->title('Ticket Not Found')
+                ->title('Ticket Tidak Ditemukan')
                 ->danger()
                 ->send();
 
@@ -260,8 +260,8 @@ class ProjectBoard extends Page
 
         if (! $this->canEditTicket($ticket)) {
             Notification::make()
-                ->title('Permission Denied')
-                ->body('You do not have permission to edit this ticket.')
+                ->title('Izin Ditolak')
+                ->body('Anda tidak memiliki izin untuk mengedit tiket ini.')
                 ->danger()
                 ->send();
 
@@ -275,7 +275,7 @@ class ProjectBoard extends Page
     {
         return [
             Action::make('new_ticket')
-                ->label('New Ticket')
+                ->label('Ticket Baru')
                 ->icon('heroicon-m-plus')
                 ->visible(fn() => $this->selectedProject !== null && auth()->user()->can('create_ticket'))
                 ->url(fn(): string => TicketResource::getUrl('create', [
@@ -291,7 +291,8 @@ class ProjectBoard extends Page
                 ->color('warning'),
 
             ExportTicketsAction::make()
-                ->visible(fn() => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin'])),
+                ->visible(fn() => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin']))
+                ->label('Export Ticket'),
         ];
     }
 
@@ -355,8 +356,8 @@ class ProjectBoard extends Page
     {
         if (empty($selectedColumns)) {
             Notification::make()
-                ->title('Export Failed')
-                ->body('Please select at least one column to export.')
+                ->title('Export Gagal')
+                ->body('pilih setidaknya satu kolom untuk di eksport.')
                 ->danger()
                 ->send();
             return;
@@ -412,14 +413,14 @@ class ProjectBoard extends Page
             ");
 
             Notification::make()
-                ->title('Export Successful')
-                ->body('Your Excel file is being downloaded.')
+                ->title('Export Berhasil')
+                ->body('File Excel berhasil diunduh.')
                 ->success()
                 ->send();
         } catch (\Exception $e) {
             Notification::make()
-                ->title('Export Failed')
-                ->body('An error occurred while exporting: ' . $e->getMessage())
+                ->title('Export Gagal')
+                ->body('Terjadi error saat mengunduh file: ' . $e->getMessage())
                 ->danger()
                 ->send();
         }
