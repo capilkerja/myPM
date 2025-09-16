@@ -32,31 +32,48 @@ class ProjectResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->label('Nama Project')
+                    ->placeholder('Masukkan nama project')
+                    ->helperText('Project merupakan goal/tujuan yang ingin dicapai oleh tim anda')
+                    ->columnSpanFull()
                     ->maxLength(255),
                 Forms\Components\RichEditor::make('description')
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->required()
+                    ->label('Deskripsi Project')
+                    ->placeholder('Deskripsikan Detail Project/Goal yang ingin dicapai oleh tim anda'),
                 Forms\Components\TextInput::make('ticket_prefix')
                     ->required()
+                    ->label('Kode Ticket')
+                    ->placeholder('Masukkan Kode Tiket')
+                    ->helperText('Kode Tikcket bersifat unik untuk membedakan tiap project. Misal: IKD-XXXX')
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('start_date')
-                    ->label('Start Date')
+                    ->label('Tanggal Mulai')
+                    ->placeholder('Tanggal mulai project')
+                    // ->default(now())
+                    ->required()
                     ->native(false)
+                    ->locale('id')
                     ->displayFormat('d/m/Y'),
                 Forms\Components\DatePicker::make('end_date')
-                    ->label('End Date')
+                    ->label('Tanggal Selesai')
+                    ->placeholder('Tanggal selesai project')
+                    ->required()
+                    ->locale('id')
                     ->native(false)
                     ->displayFormat('d/m/Y')
                     ->afterOrEqual('start_date'),
                 Forms\Components\Toggle::make('create_default_statuses')
-                    ->label('Use Default Ticket Statuses')
-                    ->helperText('Create standard Backlog, To Do, In Progress, Review, and Done statuses automatically')
+                    ->label('Gunakan Status Tiket Default')
+                    ->helperText(' Buat Status Ticket secara otomatis( Backlog, To Do, In Progress, Review, Done)')
                     ->default(true)
                     ->dehydrated(false)
                     ->visible(fn($livewire) => $livewire instanceof Pages\CreateProject),
 
                 Forms\Components\Toggle::make('is_pinned')
-                    ->label('Pin Project')
-                    ->helperText('Pinned projects will appear in the dashboard timeline')
+                    ->label('Sematkan Project')
+                    ->helperText('Project yang disematkan akan muncul di dashboard.')
                     ->live()
                     ->afterStateUpdated(function ($state, $set) {
                         if ($state) {
@@ -83,11 +100,13 @@ class ProjectResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label('Nama Project'),
                 Tables\Columns\TextColumn::make('ticket_prefix')
-                    ->searchable(),
+                    ->searchable()
+                    ->label('Kode Ticket'),
                 Tables\Columns\TextColumn::make('progress_percentage')
-                    ->label('Progress')
+                    ->label('Progres')
                     ->getStateUsing(function (Project $record): string {
                         return $record->progress_percentage . '%';
                     })
@@ -99,18 +118,20 @@ class ProjectResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->date('d/m/Y')
+                    ->label('Tanggal Mulai')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
                     ->date('d/m/Y')
+                    ->label('Tanggal Selesai')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('remaining_days')
-                    ->label('Remaining Days')
+                    ->label('Deadline')
                     ->getStateUsing(function (Project $record): ?string {
                         if (!$record->end_date) {
                             return null;
                         }
 
-                        return $record->remaining_days . ' days';
+                        return $record->remaining_days . ' hari';
                     })
                     ->badge()
                     ->color(
@@ -130,10 +151,10 @@ class ProjectResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('members_count')
                     ->counts('members')
-                    ->label('Members'),
+                    ->label('Anggota'),
                 Tables\Columns\TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Tickets'),
+                    ->label('Jumlah Ticket'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
