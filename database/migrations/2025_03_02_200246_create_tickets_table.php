@@ -19,6 +19,10 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->date('due_date')->nullable();
+            $table->integer('output')->nullable();
+            $table->integer('input')->nullable();
+            $table->text('category')->nullable();
+            $table->text('document')->nullable();
             $table->timestamps();
         });
     }

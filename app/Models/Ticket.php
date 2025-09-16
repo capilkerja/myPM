@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Ticket extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'project_id',
@@ -24,6 +26,10 @@ class Ticket extends Model
         'uuid',
         'epic_id',
         'created_by',
+        'output',
+        'input',
+        'category',
+        'document',
     ];
 
     protected $casts = [
@@ -120,5 +126,11 @@ class Ticket extends Model
     public function isAssignedTo(User $user): bool
     {
         return $this->assignees()->where('user_id', $user->id)->exists();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['uuid', 'project_id', 'ticket_status_id', 'name', 'description', 'user_id', 'due_date', 'epic_id']);
     }
 }

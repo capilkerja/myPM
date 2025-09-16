@@ -16,6 +16,10 @@ use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Epic;
+use Filament\Tables\Actions\ActionGroup;
+use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\TextInput;
+use Rmsramos\Activitylog\Actions\ActivityLogTimelineTableAction;
 
 class TicketResource extends Resource
 {
@@ -57,6 +61,7 @@ class TicketResource extends Resource
             ->schema([
                 Forms\Components\Select::make('project_id')
                     ->label('Project')
+                    ->placeholder('Pilih Project/Goal yang ingin dicapai')
                     ->options(function () {
                         if (auth()->user()->hasRole(['super_admin'])) {
                             return Project::pluck('name', 'id')->toArray();
@@ -77,6 +82,7 @@ class TicketResource extends Resource
 
                 Forms\Components\Select::make('ticket_status_id')
                     ->label('Status')
+                    ->placeholder('Pilih Status')
                     ->options(function ($get) {
                         $projectId = $get('project_id');
                         if (! $projectId) {
@@ -93,7 +99,8 @@ class TicketResource extends Resource
                     ->preload(),
 
                 Forms\Components\Select::make('priority_id')
-                    ->label('Priority')
+                    ->label('Prioritas')
+                    ->placeholder('Pilih Prioritas')
                     ->options(TicketPriority::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->preload()
@@ -101,6 +108,8 @@ class TicketResource extends Resource
 
                 Forms\Components\Select::make('epic_id')
                     ->label('Epic')
+                    ->placeholder('Pilih Epic')
+                    ->helperText('Harap diperhartikan dalam pemilihan Epic/Rencana Aksi agar ticket lebih terstruktur dan sesuai dengan project/goal yang ingin dicapai')
                     ->options(function (callable $get) {
                         $projectId = $get('project_id');
 
@@ -118,18 +127,50 @@ class TicketResource extends Resource
                     ->hidden(fn(callable $get): bool => !$get('project_id')),
 
                 Forms\Components\TextInput::make('name')
-                    ->label('Ticket Name')
+                    ->label('Nama Ticket')
+                    ->placeholder('Masukkan nama ticket')
+                    ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\RichEditor::make('description')
+                    ->placeholder('Deskripsi Rincian Ticket/Tugas yang akan diberikan kepada petugas')
                     ->label('Description')
                     ->fileAttachmentsDirectory('attachments')
                     ->columnSpanFull(),
 
+                Forms\Components\TextInput::make('output')
+                    ->label('Target')
+                    ->placeholder('Masukkan target yang ingin dicapai')
+                    ->numeric()
+                    ->rules(['integer', 'min:0'])
+                    // ->disabled(fn() => ! Auth::user()->hasAnyRole(['super_admin', 'kabid']))
+                    ->required(),
+
+                Forms\Components\TextInput::make('input')
+                    ->label('Realisasi')
+                    ->placeholder('Masukkan realisasi dari target yang telah dicapai')
+                    ->numeric()
+                    ->rules(['integer', 'min:0'])
+                    ->required(),
+
+                Forms\Components\TextInput::make('category')
+                    ->label('Satuan')
+                    ->helperText('Satuan dari target (Contoh: Data, Dokumen, Orang, Laporan, dll)')
+                    ->required()
+                    // ->disabled(fn() => ! Auth::user()->hasAnyRole(['super_admin', 'kabid']))
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('document')
+                    ->label('Data Dukung')
+                    ->helperText('Link File Dukung (Contoh: Google Drive, Dropbox, Github, dll)')
+                    ->required()
+                    ->maxLength(255),
+
                 // Multi-user assignment
                 Forms\Components\Select::make('assignees')
-                    ->label('Assigned to')
+                    ->label('Petugas')
+                    ->placeholder('Pilih Petugas')
                     ->multiple()
                     ->relationship(
                         name: 'assignees',
@@ -152,19 +193,27 @@ class TicketResource extends Resource
                     )
                     ->searchable()
                     ->preload()
-                    ->helperText('Select multiple users to assign this ticket to. Only project members can be assigned.')
+                    ->helperText('Pilih satu atau lebih user untuk memberi tugas kepada mereka. Hanya member tim  yang dapat ditunjuk sebagai petugas pada sebuah ticket')
                     ->hidden(fn(callable $get): bool => !$get('project_id'))
                     ->live(),
 
                 Forms\Components\DatePicker::make('start_date')
-                    ->label('Start Date')
-                    ->nullable(),
+                    ->label('Tanggal Mulai')
+                    ->helperText('Tanggal mulai untuk ticket ini')
+                    ->required()
+                    ->native(false)
+                    ->locale('id')
+                    ->displayFormat('d/m/Y'),
 
                 Forms\Components\DatePicker::make('due_date')
-                    ->label('Due Date')
-                    ->nullable(),
+                    ->label('Tanggal Selesai')
+                    ->helperText('Deadline untuk ticket ini, set tanggal +7 hari dari tanggal mulai')
+                    ->required()
+                    ->native(false)
+                    ->locale('id')
+                    ->displayFormat('d/m/Y'),
                 Forms\Components\Select::make('created_by')
-                    ->label('Created By')
+                    ->label('Dibuat oleh')
                     ->relationship('creator', 'name')
                     ->disabled()
                     ->hiddenOn('create'),
@@ -176,17 +225,20 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('uuid')
-                    ->label('Ticket ID')
+                    ->label('Kode Ticket')
+                    ->wrap()
                     ->searchable()
                     ->copyable(),
 
                 Tables\Columns\TextColumn::make('project.name')
-                    ->label('Project')
+                    ->label('Nama Project')
                     ->sortable()
+                    ->wrap()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label('Nama Ticket')
+                    ->wrap()
                     ->searchable()
                     ->limit(30),
 
@@ -196,7 +248,7 @@ class TicketResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('priority.name')
-                    ->label('Priority')
+                    ->label('Prioritas')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'High' => 'danger',
@@ -210,7 +262,8 @@ class TicketResource extends Resource
 
                 // Display multiple assignees
                 Tables\Columns\TextColumn::make('assignees.name')
-                    ->label('Assign To')
+                    ->label('Petugas')
+                    ->wrap()
                     ->badge()
                     ->separator(',')
                     ->limitList(2)
@@ -218,18 +271,19 @@ class TicketResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('creator.name')
-                    ->label('Created By')
+                    ->label('Dibuat oleh')
+                    ->wrap()
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('start_date')
-                    ->label('Start Date')
+                    ->label('Tanggal Mulai')
                     ->date()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('due_date')
-                    ->label('Due Date')
+                    ->label('Tanggal Selesai')
                     ->date()
                     ->sortable(),
 
@@ -330,21 +384,38 @@ class TicketResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Action::make('copy')
-                    ->label('Copy')
-                    ->icon('heroicon-o-document-duplicate')
-                    ->color('info')
-                    ->action(function ($record, $livewire) {
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make()
+                        ->label('Lihat'),
+                    Tables\Actions\EditAction::make()
+                        ->label('Ubah'),
+                    Tables\Actions\DeleteAction::make()
+                        ->label('Hapus'),
+                    Action::make('copy')
+                        ->label('Copy')
+                        ->icon('heroicon-o-document-duplicate')
+                        ->color('info')
+                        ->action(function ($record, $livewire) {
 
-                        // Redirect ke halaman create, dengan parameter copy_from
-                        return $livewire->redirect(
-                            static::getUrl('create', [
-                                'copy_from' => $record->id,
-                            ])
-                        );
-                    }),
+                            // Redirect ke halaman create, dengan parameter copy_from
+                            return $livewire->redirect(
+                                static::getUrl('create', [
+                                    'copy_from' => $record->id,
+                                ])
+                            );
+                        }),
+                    ActivityLogTimelineTableAction::make('Aktivitas')
+                        ->timelineIcons([
+                            'created' => 'heroicon-m-check-badge',
+                            'updated' => 'heroicon-m-pencil-square',
+                        ])
+                        ->timelineIconColors([
+                            'created' => 'info',
+                            'updated' => 'warning',
+                        ])
+                        ->limit(10),
+                ])
+                    ->tooltip('Aksi'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
