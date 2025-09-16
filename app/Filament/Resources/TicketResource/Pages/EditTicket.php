@@ -7,6 +7,7 @@ use App\Models\Project;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Notifications\Notification;
+use App\Notifications\TicketCompletedNotification;
 
 class EditTicket extends EditRecord
 {
@@ -25,24 +26,24 @@ class EditTicket extends EditRecord
         // Handle assignees validation before saving
         if (!empty($data['assignees']) && !empty($data['project_id'])) {
             $project = Project::find($data['project_id']);
-            
+
             if ($project) {
                 $validAssignees = [];
                 $invalidAssignees = [];
-                
+
                 foreach ($data['assignees'] as $userId) {
                     $isMember = $project->members()->where('users.id', $userId)->exists();
-                    
+
                     if ($isMember) {
                         $validAssignees[] = $userId;
                     } else {
                         $invalidAssignees[] = $userId;
                     }
                 }
-                
+
                 // Update data with only valid assignees
                 $data['assignees'] = $validAssignees;
-                
+
                 // Show warning if some users were invalid
                 if (!empty($invalidAssignees)) {
                     Notification::make()
@@ -59,11 +60,22 @@ class EditTicket extends EditRecord
 
     protected function afterSave(): void
     {
-        // Sync assignees after saving (since it's a many-to-many relationship)
-        if (isset($this->data['assignees']) && is_array($this->data['assignees'])) {
-            $this->record->assignees()->sync($this->data['assignees']);
+        /** @var \App\Models\Ticket $ticket */
+        $ticket = $this->record;
+
+        // Cek apakah status berubah
+        if ($ticket->wasChanged('ticket_status_id')) {
+            // Ambil nama status sekarang
+            $statusName = $ticket->status?->name;
+
+            if ($statusName === 'Done') {
+                if ($ticket->creator) {
+                    $ticket->creator->notify(new \App\Notifications\TicketCompletedNotification($ticket));
+                }
+            }
         }
     }
+
 
     protected function getSavedNotification(): ?Notification
     {
@@ -71,5 +83,16 @@ class EditTicket extends EditRecord
             ->success()
             ->title('Ticket updated')
             ->body('The ticket has been updated successfully.');
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        $referer = request()->header('referer');
+
+        if ($referer && str_contains($referer, 'project-board-page')) {
+            return '/admin/project-board-page';
+        }
+
+        return $this->getResource()::getUrl('index');
     }
 }
