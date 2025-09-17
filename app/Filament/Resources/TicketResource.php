@@ -29,27 +29,60 @@ class TicketResource extends Resource
 
     protected static ?string $navigationLabel = 'Ticket';
 
+    protected static ?string $pluralLabel = 'Ticket';
+
     protected static ?string $navigationGroup = 'Project Management';
 
     protected static ?int $navigationSort = 5;
 
+
+    //yang sebelumnya
+    // public static function getEloquentQuery(): Builder
+    // {
+    //     $query = parent::getEloquentQuery();
+
+    //     if (! auth()->user()->hasRole(['super_admin'])) {
+    //         $query->where(function ($query) {
+    //             $query->whereHas('assignees', function ($query) {
+    //                 $query->where('users.id', auth()->id());
+    //             })
+    //                 ->orWhere('created_by', auth()->id())
+    //                 ->orWhereHas('project.members', function ($query) {
+    //                     $query->where('users.id', auth()->id());
+    //                 });
+    //         });
+    //     }
+
+    //     return $query;
+    // }
+
+    //yang baru
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
+        $user = auth()->user();
 
-        if (! auth()->user()->hasRole(['super_admin'])) {
-            $query->where(function ($query) {
-                $query->whereHas('assignees', function ($query) {
-                    $query->where('users.id', auth()->id());
+        // 1. Super Admin dapat melihat semua ticket tanpa batasan.
+        if ($user->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // 2. Kabid dapat melihat semua ticket dalam project di mana ia menjadi anggota,
+        //    dan juga ticket yang ia buat sendiri.
+        if ($user->hasRole('kabid')) {
+            return $query->where(function (Builder $builder) use ($user) {
+                $builder->whereHas('project.members', function (Builder $subQuery) use ($user) {
+                    $subQuery->where('users.id', $user->id);
                 })
-                    ->orWhere('created_by', auth()->id())
-                    ->orWhereHas('project.members', function ($query) {
-                        $query->where('users.id', auth()->id());
-                    });
+                    ->orWhere('created_by', $user->id);
             });
         }
 
-        return $query;
+        // 3. Staff (dan role lainnya sebagai default) hanya dapat melihat ticket
+        //    yang secara spesifik ditugaskan (assigned) kepadanya.
+        return $query->whereHas('assignees', function (Builder $subQuery) use ($user) {
+            $subQuery->where('users.id', $user->id);
+        });
     }
 
     public static function form(Form $form): Form
@@ -135,7 +168,7 @@ class TicketResource extends Resource
 
                 Forms\Components\RichEditor::make('description')
                     ->placeholder('Deskripsi Rincian Ticket/Tugas yang akan diberikan kepada petugas')
-                    ->label('Description')
+                    ->label('Deskripsi Ticket')
                     ->fileAttachmentsDirectory('attachments')
                     ->columnSpanFull(),
 
