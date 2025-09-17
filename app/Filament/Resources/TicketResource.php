@@ -63,7 +63,7 @@ class TicketResource extends Resource
         $user = auth()->user();
 
         // 1. Super Admin dapat melihat semua ticket tanpa batasan.
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole('super_admin')) {
             return $query;
         }
 
