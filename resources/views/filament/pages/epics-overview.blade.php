@@ -91,7 +91,7 @@
 
                                     @if ($epic->tickets->isEmpty())
                                         <div
-                                            class="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 p-4 rounded-md text-center border border-dashed border-gray-300 dark:border-gray-600 w-full">
+                                            class="text-sm text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 p-4 rounded-md text-center border border-dashed border-gray-300 dark:border-gray-600 w-full">
                                             Tidak ada ticket. Silahkan tambahkan ticket untuk epic ini
                                         </div>
                                     @else
@@ -123,7 +123,7 @@
                                                 <tbody
                                                     class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                                     @foreach ($epic->tickets as $ticket)
-                                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                        <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
                                                             <td
                                                                 class="px-3 py-2 whitespace-nowrap text-xs font-medium text-gray-900 dark:text-gray-100">
                                                                 {{ $ticket->uuid }}
@@ -134,7 +134,7 @@
                                                             </td>
                                                             <td class="px-3 py-2 whitespace-nowrap text-xs">
                                                                 <span
-                                                                    class="inline-flex rounded-full px-2 py-0.5 text-xs font-semibold 
+                                                                    class="inline-flex rounded-full px-2 py-0.5 text-xs font-semibold
                                                                     {{ match ($ticket->status->name ?? '') {
                                                                         'To Do' => 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
                                                                         'In Progress' => 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
