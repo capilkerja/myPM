@@ -12,7 +12,7 @@ class RecentActivityTable extends BaseWidget
 {
     use HasWidgetShield;
 
-    protected static ?string $heading = 'Recent Activities';
+    protected static ?string $heading = 'Aktivitas Terkini';
 
     protected int | string | array $columnSpan = [
         'md' => 2,
@@ -129,8 +129,8 @@ class RecentActivityTable extends BaseWidget
             ->paginated([5, 25, 50])
             ->poll('30s')
             ->striped()
-            ->emptyStateHeading('No Activity Found')
-            ->emptyStateDescription('No ticket activities found for the selected period.')
+            ->emptyStateHeading('Tidak Ada Aktivitas')
+            ->emptyStateDescription('Tidak ditemmukan aktivitas untuk periode yang dipilih.')
             ->emptyStateIcon('heroicon-o-clock');
     }
 }
