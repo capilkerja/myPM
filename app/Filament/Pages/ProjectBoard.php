@@ -209,7 +209,7 @@ class ProjectBoard extends Page
     public function refreshBoard(): void
     {
         // Clear cache before refreshing to get latest data
-        $this->clearProjectBoardCache();
+        // $this->clearProjectBoardCache();
         $this->loadTicketStatuses();
         $this->dispatch('ticket-updated');
     }
