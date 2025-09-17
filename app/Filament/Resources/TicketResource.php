@@ -16,6 +16,7 @@ use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Epic;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\ActionGroup;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\TextInput;
@@ -135,6 +136,7 @@ class TicketResource extends Resource
                     ->label('Prioritas')
                     ->placeholder('Pilih Prioritas')
                     ->options(TicketPriority::pluck('name', 'id')->toArray())
+                    ->required()
                     ->searchable()
                     ->preload()
                     ->nullable(),
@@ -156,6 +158,7 @@ class TicketResource extends Resource
                     })
                     ->searchable()
                     ->preload()
+                    ->required()
                     ->nullable()
                     ->hidden(fn(callable $get): bool => !$get('project_id')),
 
@@ -169,6 +172,7 @@ class TicketResource extends Resource
                 Forms\Components\RichEditor::make('description')
                     ->placeholder('Deskripsi Rincian Ticket/Tugas yang akan diberikan kepada petugas')
                     ->label('Deskripsi Ticket')
+                    ->required()
                     ->fileAttachmentsDirectory('attachments')
                     ->columnSpanFull(),
 
@@ -205,6 +209,7 @@ class TicketResource extends Resource
                     ->label('Petugas')
                     ->placeholder('Pilih Petugas')
                     ->multiple()
+                    ->required()
                     ->relationship(
                         name: 'assignees',
                         titleAttribute: 'name',
@@ -333,44 +338,59 @@ class TicketResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('project_id')
-                    ->label('Project')
-                    ->options(function () {
-                        if (auth()->user()->hasRole(['super_admin'])) {
-                            return Project::pluck('name', 'id')->toArray();
-                        }
-
-                        return auth()->user()->projects()->pluck('name', 'projects.id')->toArray();
-                    })
-                    ->searchable()
-                    ->preload(),
-
                 Tables\Filters\SelectFilter::make('ticket_status_id')
-                    ->label('Status')
-                    ->options(function () {
-                        $projectId = request()->input('tableFilters.project_id');
+                    ->form([
+                        Select::make('project_id')
+                            ->label('Project')
+                            ->searchable()
+                            ->placeholder('Pilih Project')
+                            ->options(function () {
+                                if (auth()->user()->hasRole(['super_admin'])) {
+                                    return Project::pluck('name', 'id')->toArray();
+                                }
 
-                        if (!$projectId) {
-                            return [];
+                                return auth()->user()->projects()->pluck('name', 'projects.id')->toArray();
+                            })
+                            ->reactive(),
+
+                        Select::make('ticket_status_id')
+                            ->label('Status Tiket')
+                            ->searchable()
+                            ->placeholder('Pilih Status')
+                            ->helperText('Pilih project terlebih dahulu')
+                            ->options(function (callable $get) {
+                                $projectId = $get('project_id');
+
+                                if (!$projectId) return [];
+
+                                return \App\Models\TicketStatus::where('project_id', $projectId)
+                                    ->select('name', \DB::raw('MIN(id) as id'))
+                                    ->groupBy('name')
+                                    ->pluck('name', 'id')
+                                    ->toArray();
+                            }),
+                    ])
+                    ->query(function ($query, array $data) {
+                        if (!empty($data['project_id'])) {
+                            $query->where('project_id', $data['project_id']);
                         }
 
-                        return TicketStatus::where('project_id', $projectId)
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->searchable()
-                    ->preload(),
+                        if (!empty($data['ticket_status_id'])) {
+                            $query->where('ticket_status_id', $data['ticket_status_id']);
+                        }
+
+                        return $query;
+                    }),
 
                 Tables\Filters\SelectFilter::make('epic_id')
                     ->label('Epic')
                     ->options(function () {
-                        $projectId = request()->input('tableFilters.project_id');
-
-                        if (!$projectId) {
-                            return [];
+                        if (auth()->user()->hasRole(['super_admin'])) {
+                            return Epic::pluck('name', 'id')->toArray();
                         }
-
-                        return Epic::where('project_id', $projectId)
+                        // return Epic::pluck('name', 'id')->toArray();
+                        // return Epic::where('project_id', auth()->user()->projects()->first()->id)->pluck('name', 'id')->toArray();
+                        return Epic::whereIn('project_id', auth()->user()->projects()->pluck('projects.id')->toArray())
                             ->pluck('name', 'id')
                             ->toArray();
                     })
