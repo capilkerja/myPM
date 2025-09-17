@@ -192,7 +192,7 @@ class ProjectBoard extends Page
                 'ticket_status_id' => $newStatusId,
             ]);
             // Clear cache after ticket update
-            $this->clearProjectBoardCache();
+            // $this->clearProjectBoardCache();
 
             $this->loadTicketStatuses();
 
