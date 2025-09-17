@@ -23,6 +23,7 @@ class TicketCommentResource extends Resource
         return $form
             ->schema([
                 Forms\Components\RichEditor::make('comment')
+                    ->label('Komentar')
                     ->required()
                     ->columnSpanFull(),
             ]);

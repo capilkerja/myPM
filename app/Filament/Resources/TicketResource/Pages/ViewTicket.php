@@ -42,7 +42,7 @@ class ViewTicket extends ViewRecord
                 }),
 
             Actions\Action::make('addComment')
-                ->label('Add Comment')
+                ->label('Tambahkan Komentar')
                 ->icon('heroicon-o-chat-bubble-left-right')
                 ->color('success')
                 ->form([
@@ -64,16 +64,16 @@ class ViewTicket extends ViewRecord
                         ->update(['read_at' => now()]);
 
                     Notification::make()
-                        ->title('Comment added successfully')
+                        ->title('Komentar berhasil ditambahkan')
                         ->success()
                         ->send();
                 })
                 ->visible($canComment),
 
             Action::make('back')
-                ->label('Back to Board')
+                ->label('Kembali ke Board')
                 ->color('gray')
-                ->url(fn () => ProjectBoard::getUrl(['project_id' => $this->record->project_id])),
+                ->url(fn() => ProjectBoard::getUrl(['project_id' => $this->record->project_id])),
         ];
     }
 
@@ -83,7 +83,7 @@ class ViewTicket extends ViewRecord
 
         if (! $comment) {
             Notification::make()
-                ->title('Comment not found')
+                ->title('Komentar tidak ditemukan')
                 ->danger()
                 ->send();
 
@@ -93,7 +93,7 @@ class ViewTicket extends ViewRecord
         // Check permissions
         if (! auth()->user()->can('update', $comment)) {
             Notification::make()
-                ->title('You do not have permission to edit this comment')
+                ->title('Anda tidak memiliki izin untuk mengedit komentar ini.')
                 ->danger()
                 ->send();
 
@@ -110,7 +110,7 @@ class ViewTicket extends ViewRecord
 
         if (! $comment) {
             Notification::make()
-                ->title('Comment not found')
+                ->title('Komentar tidak ditemukan')
                 ->danger()
                 ->send();
 
@@ -120,7 +120,7 @@ class ViewTicket extends ViewRecord
         // Check permissions
         if (! auth()->user()->can('delete', $comment)) {
             Notification::make()
-                ->title('You do not have permission to delete this comment')
+                ->title('Anda tidak memiliki izin untuk menghapus komentar ini.')
                 ->danger()
                 ->send();
 
@@ -130,7 +130,7 @@ class ViewTicket extends ViewRecord
         $comment->delete();
 
         Notification::make()
-            ->title('Comment deleted successfully')
+            ->title('Komentar berhasil dihapus')
             ->success()
             ->send();
 
@@ -148,11 +148,11 @@ class ViewTicket extends ViewRecord
                             Section::make()
                                 ->schema([
                                     TextEntry::make('uuid')
-                                        ->label('Ticket ID')
+                                        ->label('Kode Ticket')
                                         ->copyable(),
 
                                     TextEntry::make('name')
-                                        ->label('Ticket Name'),
+                                        ->label('Nama Ticket'),
 
                                     TextEntry::make('project.name')
                                         ->label('Project'),
@@ -165,7 +165,7 @@ class ViewTicket extends ViewRecord
                                     TextEntry::make('status.name')
                                         ->label('Status')
                                         ->badge()
-                                        ->color(fn ($state) => match ($state) {
+                                        ->color(fn($state) => match ($state) {
                                             'To Do' => 'warning',
                                             'In Progress' => 'info',
                                             'Review' => 'primary',
@@ -175,17 +175,17 @@ class ViewTicket extends ViewRecord
 
                                     // FIXED: Multi-user assignees
                                     TextEntry::make('assignees.name')
-                                        ->label('Assigned To')
+                                        ->label('Petugas')
                                         ->badge()
                                         ->separator(',')
                                         ->default('Unassigned'),
 
                                     TextEntry::make('creator.name')
-                                        ->label('Created By')
+                                        ->label('Dibuat oleh')
                                         ->default('Unknown'),
 
                                     TextEntry::make('due_date')
-                                        ->label('Due Date')
+                                        ->label('Deadline')
                                         ->date(),
                                 ]),
                         ])->columnSpan(1),
@@ -217,12 +217,12 @@ class ViewTicket extends ViewRecord
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Comments')
+                Section::make('Komentar')
                     ->icon('heroicon-o-chat-bubble-left-right')
-                    ->description('Discussion about this ticket')
+                    ->description('Diskusikan ticket ini')
                     ->schema([
                         TextEntry::make('comments_list')
-                            ->label('Recent Comments')
+                            ->label('Komentar Terbaru')
                             ->state(function (Ticket $record) {
                                 if (method_exists($record, 'comments')) {
                                     return $record->comments()->with('user')->latest()->get();
@@ -234,8 +234,9 @@ class ViewTicket extends ViewRecord
                     ])
                     ->collapsible(),
 
-                Section::make('Status History')
+                Section::make('History Status')
                     ->icon('heroicon-o-clock')
+                    // ->label('History Status')
                     ->collapsible()
                     ->schema([
                         TextEntry::make('histories')
@@ -249,7 +250,7 @@ class ViewTicket extends ViewRecord
     {
         return [
             Action::make('editComment')
-                ->label('Edit Comment')
+                ->label('Ubah Komentar')
                 ->mountUsing(function (Forms\Form $form, array $arguments) {
                     $commentId = $arguments['commentId'] ?? null;
 
@@ -295,7 +296,7 @@ class ViewTicket extends ViewRecord
 
                     if (! $comment) {
                         Notification::make()
-                            ->title('Comment not found')
+                            ->title('Komentar tidak ditemukan')
                             ->danger()
                             ->send();
 
@@ -305,7 +306,7 @@ class ViewTicket extends ViewRecord
                     // Check permissions
                     if (! auth()->user()->can('update', $comment)) {
                         Notification::make()
-                            ->title('You do not have permission to edit this comment')
+                            ->title('anda tidak memiliki izin untuk mengedit komentar ini.')
                             ->danger()
                             ->send();
 
@@ -317,7 +318,7 @@ class ViewTicket extends ViewRecord
                     ]);
 
                     Notification::make()
-                        ->title('Comment updated successfully')
+                        ->title('Komentar berhasil diperbarui')
                         ->success()
                         ->send();
 
@@ -328,7 +329,7 @@ class ViewTicket extends ViewRecord
                     $this->redirect($this->getResource()::getUrl('view', ['record' => $this->getRecord()]));
                 })
                 ->modalWidth('lg')
-                ->modalHeading('Edit Comment')
+                ->modalHeading('Ubah Komentar')
                 ->modalSubmitActionLabel('Update')
                 ->color('success')
                 ->icon('heroicon-o-pencil'),

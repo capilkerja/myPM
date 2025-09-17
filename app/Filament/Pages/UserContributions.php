@@ -20,7 +20,7 @@ class UserContributions extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar-square';
     protected static ?string $navigationLabel = 'Kontribusi Pengguna';
-    protected static ?string $title = 'User Contributions';
+    protected static ?string $title = 'Kontribusi Pengguna';
     protected static ?int $navigationSort = 5;
     protected static string $view = 'filament.pages.user-contributions';
     protected static ?string $navigationGroup = 'Analytics';
@@ -28,7 +28,7 @@ class UserContributions extends Page implements HasForms
 
     public function getSubheading(): ?string
     {
-        return 'Track daily activity and contributions across the team';
+        return 'Lacak aktivitas harian dan kontribusi dari seluruh tim.';
     }
     public Collection $users;
     public ?string $selectedUserId = null;
@@ -257,11 +257,11 @@ class UserContributions extends Page implements HasForms
     public function getTimeRangeLabel(): string
     {
         return match ($this->timeRange) {
-            '1month' => 'Last Month',
-            '3months' => 'Last 3 Months',
-            '6months' => 'Last 6 Months',
-            '1year' => 'Last Year',
-            default => 'Last 3 Months'
+            '1month' => '1 Bulan Terakhir',
+            '3months' => '3 Bulan Terakhir',
+            '6months' => '6 Bulan Terakhir',
+            '1year' => 'Tahun Lalu',
+            default => '3 Bulan Terakhir'
         };
     }
 }

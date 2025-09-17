@@ -107,13 +107,14 @@
                                         <p class="text-lg font-bold text-gray-900 dark:text-white">
                                             {{ number_format($entry['stats']['tickets_created']) }}
                                         </p>
-                                        <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">Ticket</p>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">Ticket Dibuat
+                                        </p>
                                     </div>
                                     <div class="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                                         <p class="text-lg font-bold text-gray-900 dark:text-white">
                                             {{ number_format($entry['stats']['status_changes']) }}
                                         </p>
-                                        <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">Pembaruan Status
+                                        <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">Ubah Status
                                         </p>
                                     </div>
                                     <div class="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
