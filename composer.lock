@@ -1470,7 +1470,7 @@
         },
         {
             "name": "filament/actions",
-            "version": "v3.3.38",
+            "version": "v3.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/actions.git",
@@ -1523,7 +1523,7 @@
         },
         {
             "name": "filament/filament",
-            "version": "v3.3.38",
+            "version": "v3.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/panels.git",
@@ -1588,7 +1588,7 @@
         },
         {
             "name": "filament/forms",
-            "version": "v3.3.38",
+            "version": "v3.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/forms.git",
@@ -1644,7 +1644,7 @@
         },
         {
             "name": "filament/infolists",
-            "version": "v3.3.38",
+            "version": "v3.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/infolists.git",
@@ -1695,7 +1695,7 @@
         },
         {
             "name": "filament/notifications",
-            "version": "v3.3.38",
+            "version": "v3.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/notifications.git",
@@ -1747,7 +1747,7 @@
         },
         {
             "name": "filament/support",
-            "version": "v3.3.38",
+            "version": "v3.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/support.git",
@@ -1806,16 +1806,16 @@
         },
         {
             "name": "filament/tables",
-            "version": "v3.3.38",
+            "version": "v3.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/tables.git",
-                "reference": "20ce6217382785df7b39b8473644c1bfe967963c"
+                "reference": "2e1e3aeeeccd6b74e5d038325af52635d1108e4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/tables/zipball/20ce6217382785df7b39b8473644c1bfe967963c",
-                "reference": "20ce6217382785df7b39b8473644c1bfe967963c",
+                "url": "https://api.github.com/repos/filamentphp/tables/zipball/2e1e3aeeeccd6b74e5d038325af52635d1108e4c",
+                "reference": "2e1e3aeeeccd6b74e5d038325af52635d1108e4c",
                 "shasum": ""
             },
             "require": {
@@ -1854,11 +1854,11 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2025-08-12T13:15:31+00:00"
+            "time": "2025-09-17T10:47:13+00:00"
         },
         {
             "name": "filament/widgets",
-            "version": "v3.3.38",
+            "version": "v3.3.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/widgets.git",
@@ -10629,16 +10629,16 @@
         },
         {
             "name": "laravel/pint",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/pint.git",
-                "reference": "0345f3b05f136801af8c339f9d16ef29e6b4df8a"
+                "reference": "595de38458c6b0ab4cae4bcc769c2e5c5d5b8e96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/0345f3b05f136801af8c339f9d16ef29e6b4df8a",
-                "reference": "0345f3b05f136801af8c339f9d16ef29e6b4df8a",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/595de38458c6b0ab4cae4bcc769c2e5c5d5b8e96",
+                "reference": "595de38458c6b0ab4cae4bcc769c2e5c5d5b8e96",
                 "shasum": ""
             },
             "require": {
@@ -10649,9 +10649,9 @@
                 "php": "^8.2.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.82.2",
-                "illuminate/view": "^11.45.1",
-                "larastan/larastan": "^3.5.0",
+                "friendsofphp/php-cs-fixer": "^3.87.2",
+                "illuminate/view": "^11.46.0",
+                "larastan/larastan": "^3.7.1",
                 "laravel-zero/framework": "^11.45.0",
                 "mockery/mockery": "^1.6.12",
                 "nunomaduro/termwind": "^2.3.1",
@@ -10662,9 +10662,6 @@
             ],
             "type": "project",
             "autoload": {
-                "files": [
-                    "overrides/Runner/Parallel/ProcessFactory.php"
-                ],
                 "psr-4": {
                     "App\\": "app/",
                     "Database\\Seeders\\": "database/seeders/",
@@ -10694,7 +10691,7 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-            "time": "2025-07-10T18:09:32+00:00"
+            "time": "2025-09-17T01:36:44+00:00"
         },
         {
             "name": "laravel/sail",
