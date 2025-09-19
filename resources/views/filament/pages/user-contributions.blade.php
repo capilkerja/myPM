@@ -48,7 +48,7 @@
                                     {{ $userData['user']->name }}
                                 </h3>
                                 <p class="fi-section-header-description text-sm text-gray-500 dark:text-gray-400">
-                                    {{ $this->getTimeRangeLabel() }} Activity
+                                    Aktivitas {{ $this->getTimeRangeLabel() }}
                                 </p>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
 
                                 <!-- Legend -->
                                 <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                    <span>Less</span>
+                                    <span>Kurang Aktif</span>
                                     <div class="flex gap-1">
                                         <div class="h-3 w-3 rounded-sm bg-gray-200 dark:bg-gray-700"
                                             title="No activity"></div>
@@ -117,7 +117,7 @@
                                         <div class="h-3 w-3 rounded-sm" style="background-color: #216e39"
                                             title="Very high activity (11+)"></div>
                                     </div>
-                                    <span>Lebih Banyak</span>
+                                    <span>Sangat Aktif</span>
                                 </div>
                             </div>
 

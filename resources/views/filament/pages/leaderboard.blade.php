@@ -233,7 +233,7 @@
                             📊 Sistematika Penilaian
                         </h3>
                         <p class="fi-section-header-description text-sm text-gray-500 dark:text-gray-400">
-                            Bagaimana skor kontributor dihitung
+                            Bagaimana skor kontributor dihitung? berikut penjabarannya
                         </p>
                     </div>
                 </div>

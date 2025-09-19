@@ -205,11 +205,11 @@ class Leaderboard extends Page implements HasForms
     public function getTimeRangeLabel(): string
     {
         return match ($this->timeRange) {
-            '7days' => 'Last 7 Days',
-            '30days' => 'Last 30 Days',
-            'thisweek' => 'This Week',
-            '1month' => 'Last Month',
-            default => 'Last 7 Days'
+            '7days' => '7 Hari Terakhir',
+            '30days' => '30 Hari Terakhir',
+            'thisweek' => 'Minggu Ini',
+            '1month' => 'Bulan Lalu',
+            default => '7 Hari lalu'
         };
     }
 
