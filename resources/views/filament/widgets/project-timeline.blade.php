@@ -11,7 +11,7 @@
                 <div class="flex gap-2">
                     <x-filament::button wire:click="setFilter('pinned')" :color="$filter === 'pinned' ? 'primary' : 'gray'" :outlined="$filter !== 'pinned'"
                         size="sm">
-                        Pinned Projects
+                        Project Dipin
                         <x-filament::badge :color="$filter === 'pinned' ? 'primary' : 'gray'" size="sm" class="ml-1">
                             {{ $counts['pinned'] }}
                         </x-filament::badge>
@@ -19,7 +19,7 @@
 
                     <x-filament::button wire:click="setFilter('all')" :color="$filter === 'all' ? 'primary' : 'gray'" :outlined="$filter !== 'all'"
                         size="sm">
-                        All Projects
+                        Semua Project
                         <x-filament::badge :color="$filter === 'all' ? 'primary' : 'gray'" size="sm" class="ml-1">
                             {{ $counts['all'] }}
                         </x-filament::badge>
@@ -85,7 +85,7 @@
                                         {{ $project['start_date'] }} - {{ $project['end_date'] }}
                                     </div>
                                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        {{ $project['total_days'] }} total hari
+                                        {{ $project['total_days'] }} Hari Total
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,8 @@
                                         @if ($project['past_days'] > 0)
                                             <div class="text-gray-600 dark:text-gray-400">
                                                 <span class="font-medium">{{ $project['past_days'] }}</span>
-                                                {{ Str::plural('day', $project['past_days']) }} completed
+                                                {{-- {{ Str::plural('day', $project['past_days']) }} completed --}}
+                                                {{ 'hari', $project['past_days'] }} berjalan
                                             </div>
                                         @endif
                                     </div>
@@ -118,17 +119,19 @@
                                     <div class="text-right">
                                         @if ($project['remaining_days'] > 0)
                                             <div class="font-medium text-gray-900 dark:text-white">
-                                                {{ $project['remaining_days'] }}
-                                                {{ Str::plural('day', $project['remaining_days']) }} remaining
+                                                kurang {{ $project['remaining_days'] }}
+                                                {{-- {{ Str::plural('day', $project['remaining_days']) }} remaining --}}
+                                                {{ 'hari', $project['remaining_days'] }} lagi
                                             </div>
                                         @elseif($project['remaining_days'] < 0)
                                             <div class="font-medium text-red-600 dark:text-red-400">
                                                 {{ abs($project['remaining_days']) }}
-                                                {{ Str::plural('day', abs($project['remaining_days'])) }} overdue
+                                                {{-- {{ Str::plural('day', abs($project['remaining_days'])) }} overdue --}}
+                                                {{ 'hari', abs($project['remaining_days']) }} terlambat
                                             </div>
                                         @else
                                             <div class="font-medium text-amber-600 dark:text-amber-400">
-                                                Due today
+                                                Deadline Hari Ini
                                             </div>
                                         @endif
                                     </div>
