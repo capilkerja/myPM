@@ -2,7 +2,7 @@
 
 return [
 
-    'title' => 'View :label',
+    'title' => 'Lihat :label',
 
     'breadcrumb' => 'Lihat',
 

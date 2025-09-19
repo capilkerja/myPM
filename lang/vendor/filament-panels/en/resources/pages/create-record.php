@@ -2,7 +2,7 @@
 
 return [
 
-    'title' => 'Create :label',
+    'title' => 'Buat :label',
 
     'breadcrumb' => 'Tambah',
 

@@ -75,6 +75,16 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $this->hasMany(Ticket::class);
     }
 
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    public function assignedMeetings(): BelongsToMany
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_users');
+    }
+
     public function assignedTickets(): BelongsToMany
     {
         return $this->belongsToMany(Ticket::class, 'ticket_users');
