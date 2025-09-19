@@ -31,6 +31,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'email',
         'password',
         'google_id',
+        'telegram_chat_id',
         'avatar_url'
     ];
 

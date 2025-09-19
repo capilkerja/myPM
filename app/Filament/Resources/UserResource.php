@@ -52,6 +52,9 @@ class UserResource extends Resource
                     ->multiple()
                     ->preload()
                     ->searchable(),
+                Forms\Components\TextInput::make('telegram_chat_id')
+                    // ->required()
+                    ->maxLength(255),
             ]);
     }
 
