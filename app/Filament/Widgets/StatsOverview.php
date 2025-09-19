@@ -41,12 +41,12 @@ class StatsOverview extends BaseWidget
 
         return [
             Stat::make('Total Project', $totalProjects)
-                ->description('Total Keseluruhan Project di Sistem')
+                ->description('Jumlah Keseluruhan Project di Sistem')
                 ->descriptionIcon('heroicon-m-rectangle-stack')
                 ->color('primary'),
 
             Stat::make('Total Ticket', $totalTickets)
-                ->description('Total Keseluruhan Ticket di Sistem')
+                ->description('Jumlah Keseluruhan Ticket di Sistem')
                 ->descriptionIcon('heroicon-m-ticket')
                 ->color('success'),
 
@@ -56,7 +56,7 @@ class StatsOverview extends BaseWidget
                 ->color('info'),
 
             Stat::make('Pengguna', $usersCount)
-                ->description('Pengguna Terdaftar di Sistem')
+                ->description('Jumlah Pengguna Terdaftar di Sistem')
                 ->descriptionIcon('heroicon-m-users')
                 ->color('gray'),
         ];
@@ -105,7 +105,7 @@ class StatsOverview extends BaseWidget
 
         return [
             Stat::make('Project Saya', $myProjects)
-                ->description('Project dimana kamu tergabung')
+                ->description('Jumlah project kamu')
                 ->descriptionIcon('heroicon-m-rectangle-stack')
                 ->color('primary'),
 
@@ -119,20 +119,20 @@ class StatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-pencil-square')
                 ->color('info'),
 
-            Stat::make('Project ', $projectTickets)
-                ->description('Total ticket pada project yang kamu tergabung')
-                ->descriptionIcon('heroicon-m-ticket')
-                ->color('success'),
+            // Stat::make('Project ', $projectTickets)
+            //     ->description('Total keseluruhan ticket di project kamu')
+            //     ->descriptionIcon('heroicon-m-ticket')
+            //     ->color('success'),
 
             Stat::make('Selesai Minggu Ini', $myCompletedThisWeek)
                 ->description('Ticket yang kamu selesaikan dalam minggu ini')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color($myCompletedThisWeek > 0 ? 'success' : 'gray'),
 
-            Stat::make('Ticket Baru Minggu Ini', $newTicketsThisWeek)
-                ->description('Ticket baru dalam minggu ini')
-                ->descriptionIcon('heroicon-m-plus-circle')
-                ->color('info'),
+            // Stat::make('Ticket Baru Minggu Ini', $newTicketsThisWeek)
+            //     ->description('Ticket baru dalam minggu ini')
+            //     ->descriptionIcon('heroicon-m-plus-circle')
+            //     ->color('info'),
 
             Stat::make('Melebihi Deadline', $myOverdueTickets)
                 ->description('Ticket Kamu yang melebihi deadline.')

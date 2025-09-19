@@ -9,20 +9,20 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 class UserStatisticsChart extends ChartWidget
 {
     use HasWidgetShield;
-    
-    protected static ?string $heading = 'User Statistics Chart';
-    
+
+    protected static ?string $heading = 'Statistik Pengguna di Sistem';
+
     protected int | string | array $columnSpan = [
         'md' => 2,
         'xl' => 1,
     ];
-    
+
     protected static ?int $sort = 3;
-    
+
     protected static ?string $maxHeight = '300px';
-    
+
     protected static ?string $pollingInterval = '30s';
-    
+
     protected function getData(): array
     {
         $users = User::query()
@@ -35,22 +35,22 @@ class UserStatisticsChart extends ChartWidget
             ])
             ->orderBy('name')
             ->get();
-        
+
         $labels = $users->pluck('name')->toArray();
         $projectsData = $users->pluck('total_projects')->toArray();
         $ticketsData = $users->pluck('total_assigned_tickets')->toArray();
-        
+
         return [
             'datasets' => [
                 [
-                    'label' => 'Total Projects',
+                    'label' => 'Total Project',
                     'data' => $projectsData,
                     'backgroundColor' => '#3B82F6',
                     'borderColor' => '#3B82F6',
                     'borderWidth' => 1,
                 ],
                 [
-                    'label' => 'Total Assigned Tickets',
+                    'label' => 'Total Ticket Ditugaskan',
                     'data' => $ticketsData,
                     'backgroundColor' => '#10B981',
                     'borderColor' => '#10B981',
@@ -60,12 +60,12 @@ class UserStatisticsChart extends ChartWidget
             'labels' => $labels,
         ];
     }
-    
+
     protected function getType(): string
     {
         return 'bar';
     }
-    
+
     protected function getOptions(): array
     {
         return [

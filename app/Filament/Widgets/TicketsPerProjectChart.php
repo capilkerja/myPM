@@ -11,42 +11,42 @@ use Illuminate\Support\Facades\DB;
 class TicketsPerProjectChart extends ChartWidget
 {
     use HasWidgetShield;
-    
-    protected static ?string $heading = 'Number of tickets per project';
-    
+
+    protected static ?string $heading = 'Jumlah Ticket per Project';
+
     protected static ?int $sort = 2;
-    
+
     protected int | string | array $columnSpan = [
         'md' => 2,
         'xl' => 1,
     ];
-    
+
     protected static ?string $maxHeight = '300px';
-    
+
     protected static ?string $pollingInterval = '30s';
-    
+
     protected function getData(): array
     {
         $user = auth()->user();
         $isSuperAdmin = $user->hasRole('super_admin');
-        
+
         // Query projects based on user role
         $projectsQuery = Project::query()
             ->withCount('tickets')
             ->orderBy('name');
-            
+
         if (!$isSuperAdmin) {
             $projectsQuery->whereHas('members', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             });
         }
-        
+
         $projects = $projectsQuery->get();
-        
+
         // Prepare data for chart
         $labels = $projects->pluck('name')->toArray();
         $data = $projects->pluck('tickets_count')->toArray();
-        
+
         // Generate colors for each bar
         $colors = [];
         $baseColors = [
@@ -61,11 +61,11 @@ class TicketsPerProjectChart extends ChartWidget
             '#EC4899', // Pink
             '#6B7280', // Gray
         ];
-        
+
         for ($i = 0; $i < count($labels); $i++) {
             $colors[] = $baseColors[$i % count($baseColors)];
         }
-        
+
         return [
             'datasets' => [
                 [
@@ -79,12 +79,12 @@ class TicketsPerProjectChart extends ChartWidget
             'labels' => $labels,
         ];
     }
-    
+
     protected function getType(): string
     {
         return 'bar';
     }
-    
+
     protected function getOptions(): array
     {
         return [
