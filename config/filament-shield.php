@@ -72,11 +72,12 @@ return [
         ],
 
         'widgets' => [
-            'AccountWidget', 'FilamentInfoWidget',
+            'AccountWidget',
+            'FilamentInfoWidget',
         ],
 
         'resources' => [
-            'TicketCommentResource',
+            // 'TicketCommentResource',
         ],
     ],
 
